@@ -26,7 +26,7 @@ export function Navbar() {
         <div className="flex justify-between items-center h-28">
           {/* Logo: la imagen tiene mucho margen transparente y está escalada,
               así que solo la zona visible del logo es clicable */}
-          <div className="relative flex-shrink-0 flex items-center justify-center gap-3 ml-4">
+          <div className="relative flex-shrink-0 flex items-center justify-center gap-3 ml-4 mr-8 xl:mr-12">
             <img 
               src="/logo-indigo.png" 
               alt="" 
@@ -41,12 +41,12 @@ export function Navbar() {
           </div>
 
           {/* Desktop Nav */}
-          <div className="relative z-10 hidden md:flex md:items-center md:space-x-8">
+          <div className="relative z-10 hidden lg:flex lg:items-center lg:space-x-4 xl:space-x-6">
             {NAV_LINKS.map((link) => (
               <Link
                 key={link.name}
                 href={link.href}
-                className="inline-block py-2 text-midgard-steel hover:text-midgard-navy transition-colors font-medium text-sm uppercase tracking-wide"
+                className="inline-block py-2 text-midgard-steel hover:text-midgard-navy transition-colors font-medium text-xs xl:text-sm uppercase tracking-wide whitespace-nowrap"
               >
                 {link.name}
               </Link>
@@ -55,14 +55,14 @@ export function Navbar() {
               href="https://wa.me/523314137429"
               target="_blank"
               rel="noopener noreferrer"
-              className="bg-midgard-navy text-white px-6 py-2.5 rounded-full text-sm font-semibold hover:bg-opacity-90 transition-all shadow-sm hover:shadow-md"
+              className="hidden xl:inline-block bg-midgard-navy text-white px-6 py-2.5 rounded-full text-sm font-semibold whitespace-nowrap hover:bg-opacity-90 transition-all shadow-sm hover:shadow-md"
             >
               Cotizar por WhatsApp
             </a>
           </div>
 
           {/* Mobile menu button */}
-          <div className="relative z-10 flex items-center md:hidden">
+          <div className="relative z-10 flex items-center lg:hidden">
             <button
               onClick={() => setIsOpen(!isOpen)}
               className="text-midgard-navy hover:text-midgard-steel focus:outline-none"
@@ -80,7 +80,7 @@ export function Navbar() {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
-            className="md:hidden bg-white border-b border-midgard-light-gray"
+            className="lg:hidden bg-white border-b border-midgard-light-gray"
           >
             <div className="px-4 pt-2 pb-6 space-y-1 sm:px-3 flex flex-col items-center">
               {NAV_LINKS.map((link) => (
