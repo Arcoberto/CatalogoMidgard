@@ -30,8 +30,8 @@ export const ACCESSORY_PRICES = {
   tray: { unit: 800, pack: 3500 }, // pack is for 6
   cupholder: { unit: 350, pack: 1700 }, // pack is for 6
   drawer: 3000,
-  desk: 8500, // Precio Buen Fin (precio regular $13,000)
-  shelf: 4200, // Precio Buen Fin (precio regular $6,000)
+  desk: 9490, // Precio Buen Fin -27% (precio regular $13,000)
+  shelf: 4800, // Precio Buen Fin -20% (precio regular $6,000)
   extension: { unit: 800, pack: 4000 }, // pack is for 6
 };
 

@@ -12,8 +12,8 @@ export type ProductPrice = {
 
 // Valores por defecto: se usan si la base de datos aún no tiene el precio o no responde
 export const DEFAULT_PRODUCT_PRICES: Record<ProductPriceKey, ProductPrice> = {
-  shelf: { key: 'shelf', name: 'Estante', price: 4200, regularPrice: 6000 },
-  desk: { key: 'desk', name: 'Escritorio Elevable', price: 8500, regularPrice: 13000 },
+  shelf: { key: 'shelf', name: 'Estante', price: 4800, regularPrice: 6000 },
+  desk: { key: 'desk', name: 'Escritorio Elevable', price: 9490, regularPrice: 13000 },
   chair: { key: 'chair', name: 'Silla individual', price: 3200, regularPrice: null },
   chairPack: { key: 'chairPack', name: 'Paquete de 6 sillas', price: 17500, regularPrice: null },
 };
