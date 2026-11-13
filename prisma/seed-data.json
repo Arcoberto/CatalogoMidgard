@@ -60,7 +60,7 @@
       "id": "cmqu5yodd0007117550q04z1x",
       "key": "drawer",
       "name": "Cajón para Reposar Cubierta",
-      "unitPrice": 3500,
+      "unitPrice": 3000,
       "packPrice": null,
       "updatedAt": "2026-06-25T23:59:12.098Z"
     },
@@ -69,7 +69,7 @@
       "key": "extension",
       "name": "Extensión",
       "unitPrice": 800,
-      "packPrice": 3800,
+      "packPrice": 4000,
       "updatedAt": "2026-06-25T23:59:12.113Z"
     }
   ],

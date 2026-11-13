@@ -1,8 +1,9 @@
 "use client";
 
-import { useConfiguratorStore, TableFinish, StructureStyle, TableFelt, getTableCategory, getMaxAccessories } from "@/store/useConfiguratorStore";
+import { useConfiguratorStore, TableFinish, StructureStyle, TableFelt, getTableCategory, getMaxAccessories, DEFAULT_CATALOG_STATE } from "@/store/useConfiguratorStore";
 import { Suspense, useEffect, useState } from "react";
 import { SHIPPING_RATES } from '@/lib/shipping';
+import { toCatalogPrices } from '@/lib/catalogPrices';
 import { Check, ChevronRight, Info, Video, RefreshCw, Table as TableIcon, Library, Monitor, Gift, Heart } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import dynamic from 'next/dynamic';
@@ -88,6 +89,7 @@ function ConfiguradorContent() {
     couponCode, couponDiscountType, couponDiscountValue, couponTarget, applyCoupon, removeCoupon,
     getSubtotal, getTotalPrice,
     activeProducts, toggleProduct, currentMenu, setCurrentMenu, startWithProduct, setFurniturePrices,
+    catalogPrices, setCatalogPrices,
     resetConfigurator
   } = useConfiguratorStore();
 
@@ -125,17 +127,27 @@ function ConfiguradorContent() {
   const isAsgard = model === 'Asgard';
   const [showSummary, setShowSummary] = useState(false); // solo móvil
 
-  // Precios de estante y escritorio desde el panel de administración
+  // Todos los precios vienen del panel de administración (con valores por defecto si falla)
   useEffect(() => {
-    fetch('/api/product-prices')
-      .then((r) => (r.ok ? r.json() : null))
-      .then((p) => {
-        if (p?.shelf?.price != null && p?.desk?.price != null) {
-          setFurniturePrices({ shelf: p.shelf.price, desk: p.desk.price });
-        }
-      })
-      .catch(() => {});
-  }, [setFurniturePrices]);
+    Promise.all([
+      fetch('/api/prices').then((r) => (r.ok ? r.json() : null)).catch(() => null),
+      fetch('/api/product-prices').then((r) => (r.ok ? r.json() : null)).catch(() => null),
+    ]).then(([raw, p]) => {
+      const catalog = toCatalogPrices(raw);
+      setCatalogPrices({
+        ...catalog,
+        chair: {
+          unit: p?.chair?.price ?? DEFAULT_CATALOG_STATE.chair.unit,
+          pack: p?.chairPack?.price ?? DEFAULT_CATALOG_STATE.chair.pack,
+        },
+      });
+      if (p?.shelf?.price != null && p?.desk?.price != null) {
+        setFurniturePrices({ shelf: p.shelf.price, desk: p.desk.price });
+      }
+    });
+  }, [setFurniturePrices, setCatalogPrices]);
+
+  const fmt = (n: number) => '$' + n.toLocaleString('en-US');
 
   // Evita el "deslizar para recargar" del navegador móvil mientras se usa el configurador
   useEffect(() => {
@@ -427,7 +439,7 @@ function ConfiguradorContent() {
                 <div>
                   <span className="font-semibold block text-sm">Portavasos Ajustable</span>
                   <span className="text-xs text-midgard-gray">
-                    {isAsgard ? 'Hasta 6 incluidos. Extra: +$350 c/u (+$1,700 x 6)' : '+$350 c/u (+$1,700 paquete de 6)'}
+                    {isAsgard ? `Hasta 6 incluidos. Extra: +${fmt(catalogPrices.cupholder.unit)} c/u (+${fmt(catalogPrices.cupholder.pack)} x 6)` : `+${fmt(catalogPrices.cupholder.unit)} c/u (+${fmt(catalogPrices.cupholder.pack)} paquete de 6)`}
                   </span>
                 </div>
                 <div className="flex items-center gap-3">
@@ -442,7 +454,7 @@ function ConfiguradorContent() {
               <div className="flex items-center justify-between p-3 border rounded-lg">
                 <div>
                   <span className="font-semibold block text-sm">Caja de Recursos</span>
-                  <span className="text-xs text-midgard-gray">+$300 c/u (+$1,400 paquete de 6)</span>
+                  <span className="text-xs text-midgard-gray">+{fmt(catalogPrices.resourceBox.unit)} c/u (+{fmt(catalogPrices.resourceBox.pack)} paquete de 6)</span>
                 </div>
                 <div className="flex items-center gap-3">
                   <button onClick={() => updateAccessory('resourceBox', Math.max(0, accessories.resourceBox - 1))} className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center font-bold text-gray-600 hover:bg-gray-200">-</button>
@@ -455,7 +467,7 @@ function ConfiguradorContent() {
               <div className="flex items-center justify-between p-3 border rounded-lg">
                 <div>
                   <span className="font-semibold block text-sm">Extensión Tablero individual</span>
-                  <span className="text-xs text-midgard-gray">+$800 c/u (+$4,000 paquete de 6)</span>
+                  <span className="text-xs text-midgard-gray">+{fmt(catalogPrices.extension.unit)} c/u (+{fmt(catalogPrices.extension.pack)} paquete de 6)</span>
                 </div>
                 <div className="flex items-center gap-3">
                   <button onClick={() => updateAccessory('extension', Math.max(0, accessories.extension - 1))} className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center font-bold text-gray-600 hover:bg-gray-200">-</button>
@@ -472,7 +484,7 @@ function ConfiguradorContent() {
               )}
                 <div>
                   <span className="font-semibold block text-sm">Cajón para superficies</span>
-                  <span className="text-xs text-midgard-gray">+$3,000</span>
+                  <span className="text-xs text-midgard-gray">+{fmt(catalogPrices.drawer)}</span>
                 </div>
                 <input type="checkbox" checked={accessories.drawer} onChange={(e) => updateAccessory('drawer', e.target.checked)} className="w-5 h-5 accent-midgard-navy" />
               </label>
@@ -480,7 +492,7 @@ function ConfiguradorContent() {
               <div className="flex items-center justify-between p-3 border rounded-lg hover:bg-gray-50">
                 <div>
                   <span className="font-semibold block text-sm">Sillas (Hasta 6)</span>
-                  <span className="text-xs text-midgard-gray">+$3,200 c/u (+$17,500 paquete de 6)</span>
+                  <span className="text-xs text-midgard-gray">+{fmt(catalogPrices.chair.unit)} c/u (+{fmt(catalogPrices.chair.pack)} paquete de 6)</span>
                 </div>
                 <div className="flex items-center gap-3">
                   <button onClick={() => updateAccessory('chairs', Math.max(0, accessories.chairs - 1))} className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center font-bold text-gray-600 hover:bg-gray-200">-</button>

@@ -1,10 +1,17 @@
 import Link from 'next/link';
 import { ArrowRight, CheckCircle2, Ruler } from 'lucide-react';
 import ProductGallery from '@/components/ProductGallery';
+import { getCatalogPrices } from '@/lib/catalogPrices';
+import { formatMXN } from '@/lib/productPrices';
+
+// Los precios se editan desde el panel de administración
+export const dynamic = 'force-dynamic';
+
 
 export const metadata = { title: 'Accesorios | Midgard Mesas de Juego' };
 
-export default function AccesoriosPage() {
+export default async function AccesoriosPage() {
+  const prices = await getCatalogPrices();
   return (
     <div className="flex flex-col items-center">
       {/* 1. Cajón para superficies */}
@@ -30,7 +37,7 @@ export default function AccesoriosPage() {
 
             <div className="rounded-2xl border border-midgard-light-gray p-5">
               <p className="text-sm text-midgard-gray mb-1">Precio</p>
-              <p className="text-4xl font-bold text-midgard-steel">$3,000 <span className="text-sm font-normal text-midgard-gray">MXN</span></p>
+              <p className="text-4xl font-bold text-midgard-steel">{formatMXN(prices.drawer)} <span className="text-sm font-normal text-midgard-gray">MXN</span></p>
             </div>
 
             <div>
@@ -98,11 +105,11 @@ export default function AccesoriosPage() {
             <div className="grid grid-cols-2 gap-4">
               <div className="rounded-2xl border border-midgard-light-gray bg-white p-5">
                 <p className="text-sm text-midgard-gray mb-1">Individual</p>
-                <p className="text-3xl font-bold text-midgard-steel">$350 <span className="text-sm font-normal text-midgard-gray">MXN</span></p>
+                <p className="text-3xl font-bold text-midgard-steel">{formatMXN(prices.cupholder.unit)} <span className="text-sm font-normal text-midgard-gray">MXN</span></p>
               </div>
               <div className="rounded-2xl border-2 border-midgard-purple/40 bg-midgard-purple/5 p-5">
                 <p className="text-sm text-midgard-gray mb-1">Set de 6</p>
-                <p className="text-3xl font-bold text-midgard-steel">$1,700 <span className="text-sm font-normal text-midgard-gray">MXN</span></p>
+                <p className="text-3xl font-bold text-midgard-steel">{formatMXN(prices.cupholder.pack)} <span className="text-sm font-normal text-midgard-gray">MXN</span></p>
               </div>
             </div>
 
@@ -156,11 +163,11 @@ export default function AccesoriosPage() {
             <div className="grid grid-cols-2 gap-4">
               <div className="rounded-2xl border border-midgard-light-gray p-5">
                 <p className="text-sm text-midgard-gray mb-1">Individual</p>
-                <p className="text-3xl font-bold text-midgard-steel">$800 <span className="text-sm font-normal text-midgard-gray">MXN</span></p>
+                <p className="text-3xl font-bold text-midgard-steel">{formatMXN(prices.extension.unit)} <span className="text-sm font-normal text-midgard-gray">MXN</span></p>
               </div>
               <div className="rounded-2xl border-2 border-midgard-purple/40 bg-midgard-purple/5 p-5">
                 <p className="text-sm text-midgard-gray mb-1">Set de 6</p>
-                <p className="text-3xl font-bold text-midgard-steel">$4,000 <span className="text-sm font-normal text-midgard-gray">MXN</span></p>
+                <p className="text-3xl font-bold text-midgard-steel">{formatMXN(prices.extension.pack)} <span className="text-sm font-normal text-midgard-gray">MXN</span></p>
               </div>
             </div>
 

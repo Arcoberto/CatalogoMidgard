@@ -1,10 +1,19 @@
 import Link from 'next/link';
 import { ArrowRight, CheckCircle2, ShieldCheck, Zap } from 'lucide-react';
 import ProductGallery from '@/components/ProductGallery';
+import { getCatalogPrices } from '@/lib/catalogPrices';
+import { formatMXN } from '@/lib/productPrices';
+
+// Los precios se editan desde el panel de administración
+export const dynamic = 'force-dynamic';
+
 
 export const metadata = { title: 'Mesas | Midgard Mesas de Juego' };
 
-export default function MesasPage() {
+export default async function MesasPage() {
+  const prices = await getCatalogPrices();
+  // Asgard en Buen Fin: 10% de descuento sobre el precio base del admin
+  const asgardSale = Math.round(prices.models.Asgard * 0.9);
   return (
     <div className="flex flex-col items-center">
       
@@ -95,8 +104,8 @@ export default function MesasPage() {
                 <div className="flex justify-between items-end mb-4">
                   <h3 className="text-3xl font-bold text-midgard-navy">ASGARD</h3>
                   <div className="text-right">
-                    <p className="text-sm text-midgard-gray line-through">$21,300 MXN</p>
-                    <p className="text-2xl font-bold text-red-600">$19,170 <span className="text-sm font-normal">MXN</span></p>
+                    <p className="text-sm text-midgard-gray line-through">{formatMXN(prices.models.Asgard)} MXN</p>
+                    <p className="text-2xl font-bold text-red-600">{formatMXN(asgardSale)} <span className="text-sm font-normal">MXN</span></p>
                     <p className="text-xs font-bold uppercase tracking-wide text-red-600">Buen Fin</p>
                     <p className="text-xs font-semibold text-red-600 max-w-[14rem] ml-auto">Pago a meses: Hasta 3 MSI o hasta 12 meses con interés fijo</p>
                   </div>
@@ -150,7 +159,7 @@ export default function MesasPage() {
               <div className="p-8">
                 <div className="flex justify-between items-end mb-4">
                   <h3 className="text-3xl font-bold text-midgard-navy">MIDGARD</h3>
-                  <p className="text-2xl font-bold text-midgard-steel">$17,300 <span className="text-sm font-normal text-midgard-gray">MXN</span></p>
+                  <p className="text-2xl font-bold text-midgard-steel">{formatMXN(prices.models.Midgard)} <span className="text-sm font-normal text-midgard-gray">MXN</span></p>
                 </div>
                 <p className="text-midgard-gray mb-6 h-12">
                   Mesa robusta diseñada para grupos grandes y sesiones de juego prolongadas.

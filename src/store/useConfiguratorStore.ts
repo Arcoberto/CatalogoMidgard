@@ -36,6 +36,26 @@ export const ACCESSORY_PRICES = {
 };
 
 
+export type CatalogPricesState = {
+  models: { Asgard: number; Midgard: number };
+  resourceBox: { unit: number; pack: number };
+  tray: { unit: number; pack: number };
+  cupholder: { unit: number; pack: number };
+  extension: { unit: number; pack: number };
+  drawer: number;
+  chair: { unit: number; pack: number };
+};
+
+export const DEFAULT_CATALOG_STATE: CatalogPricesState = {
+  models: { Asgard: MODELS.Asgard.basePrice, Midgard: MODELS.Midgard.basePrice },
+  resourceBox: ACCESSORY_PRICES.resourceBox,
+  tray: ACCESSORY_PRICES.tray,
+  cupholder: ACCESSORY_PRICES.cupholder,
+  extension: ACCESSORY_PRICES.extension,
+  drawer: ACCESSORY_PRICES.drawer,
+  chair: { unit: 3200, pack: 17500 },
+};
+
 export type TableCategory = 'Chica' | 'Estándar' | 'Grande';
 
 export const getTableCategory = (length: number, width: number): TableCategory => {
@@ -128,6 +148,9 @@ interface ConfiguratorState {
   /** Precios de estante y escritorio (editables desde el admin) */
   furniturePrices: { shelf: number; desk: number };
   setFurniturePrices: (prices: { shelf: number; desk: number }) => void;
+  /** Precios de mesas, accesorios y sillas (editables desde el admin) */
+  catalogPrices: CatalogPricesState;
+  setCatalogPrices: (prices: CatalogPricesState) => void;
   
   // Computed
   getSubtotal: () => number;
@@ -238,6 +261,8 @@ export const useConfiguratorStore = create<ConfiguratorState>((set, get) => ({
   setCurrentMenu: (menu) => set({ currentMenu: menu }),
   furniturePrices: { shelf: ACCESSORY_PRICES.shelf, desk: ACCESSORY_PRICES.desk },
   setFurniturePrices: (furniturePrices) => set({ furniturePrices }),
+  catalogPrices: DEFAULT_CATALOG_STATE,
+  setCatalogPrices: (catalogPrices) => set({ catalogPrices }),
   startWithProduct: (product) => set({
     activeProducts: { table: product === 'table', shelf: product === 'shelf', desk: product === 'desk' },
     currentMenu: product,
@@ -308,7 +333,8 @@ export const useConfiguratorStore = create<ConfiguratorState>((set, get) => ({
     let total = 0;
 
     if (state.activeProducts.table) {
-      let tableBasePrice = MODELS[state.model].basePrice;
+      const cp = state.catalogPrices;
+      let tableBasePrice = cp.models[state.model];
       const category = getTableCategory(state.customLength, state.customWidth);
       
       if (category === 'Chica') tableBasePrice -= 2000;
@@ -326,18 +352,18 @@ export const useConfiguratorStore = create<ConfiguratorState>((set, get) => ({
         return (packs * packPrice) + (units * unitPrice);
       };
 
-      total += calculatePackPrice(state.accessories.resourceBox, ACCESSORY_PRICES.resourceBox.unit, ACCESSORY_PRICES.resourceBox.pack);
-      total += calculatePackPrice(state.accessories.tray, ACCESSORY_PRICES.tray.unit, ACCESSORY_PRICES.tray.pack);
+      total += calculatePackPrice(state.accessories.resourceBox, cp.resourceBox.unit, cp.resourceBox.pack);
+      total += calculatePackPrice(state.accessories.tray, cp.tray.unit, cp.tray.pack);
       
       // Asgard: los primeros 6 portavasos son gratis; solo se cobran los extra
       const freeCupholders = isAsgard ? 6 : 0;
       const cupholdersToCharge = Math.max(0, state.accessories.cupholder - freeCupholders);
-      total += calculatePackPrice(cupholdersToCharge, ACCESSORY_PRICES.cupholder.unit, ACCESSORY_PRICES.cupholder.pack);
+      total += calculatePackPrice(cupholdersToCharge, cp.cupholder.unit, cp.cupholder.pack);
 
-      if (state.accessories.drawer) total += ACCESSORY_PRICES.drawer;
+      if (state.accessories.drawer) total += cp.drawer;
       // Sillas: $3,200 c/u o $17,500 el paquete de 6
-      if (state.accessories.chairs > 0) total += calculatePackPrice(state.accessories.chairs, 3200, 17500);
-      total += calculatePackPrice(state.accessories.extension, ACCESSORY_PRICES.extension.unit, ACCESSORY_PRICES.extension.pack);
+      if (state.accessories.chairs > 0) total += calculatePackPrice(state.accessories.chairs, cp.chair.unit, cp.chair.pack);
+      total += calculatePackPrice(state.accessories.extension, cp.extension.unit, cp.extension.pack);
     }
 
     if (state.activeProducts.shelf) total += state.furniturePrices.shelf;
@@ -355,7 +381,7 @@ export const useConfiguratorStore = create<ConfiguratorState>((set, get) => ({
       
       const getTargetTotal = () => {
         if (state.couponTarget === 'table_only' && state.activeProducts.table) {
-          let tableBase = MODELS[state.model].basePrice;
+          let tableBase = state.catalogPrices.models[state.model];
           const category = getTableCategory(state.customLength, state.customWidth);
           if (category === 'Chica') tableBase -= 2000;
           else if (category === 'Grande') tableBase += 3500;
