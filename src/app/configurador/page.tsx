@@ -628,7 +628,7 @@ function ConfiguradorContent() {
       </div>
 
       {/* RIGHT PANEL - 3D CANVAS & SUMMARY */}
-      <div className="order-1 lg:order-none flex-1 relative bg-gradient-to-br from-gray-100 to-gray-200 h-[42vh] min-h-[280px] sticky top-28 z-30 lg:static lg:z-auto lg:min-h-0 lg:h-auto shadow-md lg:shadow-none">
+      <div className="order-1 lg:order-none flex-1 bg-gradient-to-br from-gray-100 to-gray-200 h-[42vh] min-h-[280px] sticky top-28 z-30 lg:relative lg:top-auto lg:z-auto lg:min-h-0 lg:h-auto shadow-md lg:shadow-none">
         
         {/* 3D Canvas */}
         <div className="absolute inset-0 z-0">
