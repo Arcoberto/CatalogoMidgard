@@ -30,19 +30,25 @@ const FAQ_DATA: FaqCategory[] = [
             <div>
               <p className="font-semibold text-midgard-steel mb-1">Modelo Asgard:</p>
               <ul className="list-disc list-inside space-y-1 text-midgard-gray">
-                <li>Estructura más completa.</li>
-                <li>Reposa manos al nivel de las tapas.</li>
-                <li>Canal de aluminio rodeando el perímetro de la mesa.</li>
-                <li>Tapete con orejas removibles para usar el área debajo como otro tono de tapete.</li>
+                <li>Tiene una estructura visualmente más elaborada.</li>
+                <li>El reposa manos queda al nivel de las tapas.</li>
+                <li>Cuenta con un canal de madera alrededor del perímetro de la mesa.</li>
+                <li>Su tapete tiene orejas removibles, que permiten cambiar el acabado de paño a alfombra o el tono visible debajo de ellas.</li>
+                <li>El marco y los detalles interiores resaltan el área de juego.</li>
+                <li>Iluminación perimetral con difusor para evitar desgaste visual.</li>
               </ul>
             </div>
             <div>
               <p className="font-semibold text-midgard-steel mb-1">Modelo Midgard:</p>
               <ul className="list-disc list-inside space-y-1 text-midgard-gray">
-                <li>Estructura más simple.</li>
-                <li>Caja de arena donde las tapaderas forman la superficie y se sobreponen al reposa manos, cubriendo toda la mesa.</li>
+                <li>Tiene un diseño de líneas más sencillas y una apariencia sobria.</li>
+                <li>Su caja de juego cuenta con una estructura simple y funcional.</li>
+                <li>Las tapas forman una superficie continua y se sobreponen al reposa manos, cubriendo toda la parte superior.</li>
               </ul>
             </div>
+            <p className="text-midgard-gray">
+              <span className="font-semibold text-midgard-steel">En pocas palabras:</span> Asgard destaca por sus detalles y acabados alrededor del área de juego; Midgard ofrece un diseño más sencillo, económico y una cubierta que transforma la mesa en una superficie completa.
+            </p>
           </div>
         ),
       },
