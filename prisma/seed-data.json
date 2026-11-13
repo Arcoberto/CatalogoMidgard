@@ -1,0 +1,88 @@
+{
+  "tableModels": [
+    {
+      "id": "cmqu5yo9y00001175ihgbkrza",
+      "name": "Asgard",
+      "basePrice": 21300,
+      "description": "Mesa premium para jugadores exigentes que buscan la máxima experiencia de juego.",
+      "updatedAt": "2026-06-25T23:59:11.974Z"
+    },
+    {
+      "id": "cmqu5yoaf00011175khup9dx4",
+      "name": "Midgard",
+      "basePrice": 17300,
+      "description": "Mesa robusta diseñada para grupos grandes y sesiones de juego prolongadas.",
+      "updatedAt": "2026-06-25T23:59:11.991Z"
+    }
+  ],
+  "accessories": [
+    {
+      "id": "cmqu5yoav00021175czrult6q",
+      "key": "led",
+      "name": "Sistema LED",
+      "unitPrice": 1800,
+      "packPrice": null,
+      "updatedAt": "2026-06-25T23:59:12.007Z"
+    },
+    {
+      "id": "cmqu5yoba00031175hb685ztw",
+      "key": "diffuser",
+      "name": "Difusor LED",
+      "unitPrice": 800,
+      "packPrice": null,
+      "updatedAt": "2026-06-25T23:59:12.022Z"
+    },
+    {
+      "id": "cmqu5yobp00041175a9cnnfrd",
+      "key": "resourceBox",
+      "name": "Caja de Recursos",
+      "unitPrice": 300,
+      "packPrice": 1400,
+      "updatedAt": "2026-06-25T23:59:12.037Z"
+    },
+    {
+      "id": "cmqu5yoc000051175fgr3q1x5",
+      "key": "tray",
+      "name": "Bandeja",
+      "unitPrice": 800,
+      "packPrice": 3500,
+      "updatedAt": "2026-06-25T23:59:12.048Z"
+    },
+    {
+      "id": "cmqu5yocb0006117521h3j1o7",
+      "key": "cupholder",
+      "name": "Portavasos",
+      "unitPrice": 350,
+      "packPrice": 1700,
+      "updatedAt": "2026-06-25T23:59:12.059Z"
+    },
+    {
+      "id": "cmqu5yodd0007117550q04z1x",
+      "key": "drawer",
+      "name": "Cajón para Reposar Cubierta",
+      "unitPrice": 3500,
+      "packPrice": null,
+      "updatedAt": "2026-06-25T23:59:12.098Z"
+    },
+    {
+      "id": "cmqu5yodt00081175rfiq0xe7",
+      "key": "extension",
+      "name": "Extensión",
+      "unitPrice": 800,
+      "packPrice": 3800,
+      "updatedAt": "2026-06-25T23:59:12.113Z"
+    }
+  ],
+  "coupons": [
+    {
+      "id": "cmsgquy6z0000rv2kxmy9jagr",
+      "code": "AGOSTO5",
+      "discountType": "percentage",
+      "discountValue": 5,
+      "target": "general",
+      "isActive": true,
+      "createdAt": "2026-08-05T23:54:48.343Z",
+      "updatedAt": "2026-08-05T23:54:48.343Z"
+    }
+  ]
+}
