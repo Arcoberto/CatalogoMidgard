@@ -125,6 +125,9 @@ interface ConfiguratorState {
   setCurrentMenu: (menu: ProductType | null) => void;
   /** Deja activo solo el producto indicado (según desde dónde se entró al configurador) */
   startWithProduct: (product: ProductType) => void;
+  /** Precios de estante y escritorio (editables desde el admin) */
+  furniturePrices: { shelf: number; desk: number };
+  setFurniturePrices: (prices: { shelf: number; desk: number }) => void;
   
   // Computed
   getSubtotal: () => number;
@@ -233,6 +236,8 @@ export const useConfiguratorStore = create<ConfiguratorState>((set, get) => ({
   }),
 
   setCurrentMenu: (menu) => set({ currentMenu: menu }),
+  furniturePrices: { shelf: ACCESSORY_PRICES.shelf, desk: ACCESSORY_PRICES.desk },
+  setFurniturePrices: (furniturePrices) => set({ furniturePrices }),
   startWithProduct: (product) => set({
     activeProducts: { table: product === 'table', shelf: product === 'shelf', desk: product === 'desk' },
     currentMenu: product,
@@ -335,8 +340,8 @@ export const useConfiguratorStore = create<ConfiguratorState>((set, get) => ({
       total += calculatePackPrice(state.accessories.extension, ACCESSORY_PRICES.extension.unit, ACCESSORY_PRICES.extension.pack);
     }
 
-    if (state.activeProducts.shelf) total += ACCESSORY_PRICES.shelf;
-    if (state.activeProducts.desk) total += ACCESSORY_PRICES.desk;
+    if (state.activeProducts.shelf) total += state.furniturePrices.shelf;
+    if (state.activeProducts.desk) total += state.furniturePrices.desk;
 
     return total;
   },
@@ -356,8 +361,8 @@ export const useConfiguratorStore = create<ConfiguratorState>((set, get) => ({
           else if (category === 'Grande') tableBase += 3500;
           return tableBase;
         }
-        if (state.couponTarget === 'desk_only' && state.activeProducts.desk) return ACCESSORY_PRICES.desk;
-        if (state.couponTarget === 'shelf_only' && state.activeProducts.shelf) return ACCESSORY_PRICES.shelf;
+        if (state.couponTarget === 'desk_only' && state.activeProducts.desk) return state.furniturePrices.desk;
+        if (state.couponTarget === 'shelf_only' && state.activeProducts.shelf) return state.furniturePrices.shelf;
         if (state.couponTarget === 'general') return total;
         return 0;
       };

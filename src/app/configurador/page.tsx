@@ -87,7 +87,7 @@ function ConfiguradorContent() {
     shippingState, shippingCost, setShipping,
     couponCode, couponDiscountType, couponDiscountValue, couponTarget, applyCoupon, removeCoupon,
     getSubtotal, getTotalPrice,
-    activeProducts, toggleProduct, currentMenu, setCurrentMenu, startWithProduct,
+    activeProducts, toggleProduct, currentMenu, setCurrentMenu, startWithProduct, setFurniturePrices,
     resetConfigurator
   } = useConfiguratorStore();
 
@@ -124,6 +124,18 @@ function ConfiguradorContent() {
 
   const isAsgard = model === 'Asgard';
   const [showSummary, setShowSummary] = useState(false); // solo móvil
+
+  // Precios de estante y escritorio desde el panel de administración
+  useEffect(() => {
+    fetch('/api/product-prices')
+      .then((r) => (r.ok ? r.json() : null))
+      .then((p) => {
+        if (p?.shelf?.price != null && p?.desk?.price != null) {
+          setFurniturePrices({ shelf: p.shelf.price, desk: p.desk.price });
+        }
+      })
+      .catch(() => {});
+  }, [setFurniturePrices]);
 
   // Evita el "deslizar para recargar" del navegador móvil mientras se usa el configurador
   useEffect(() => {

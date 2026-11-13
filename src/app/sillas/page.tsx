@@ -1,6 +1,10 @@
 import Link from 'next/link';
 import { ArrowRight, CheckCircle2, Ruler } from 'lucide-react';
 import ProductGallery from '@/components/ProductGallery';
+import { getProductPrices, formatMXN } from '@/lib/productPrices';
+
+// Los precios se editan desde el panel de administración
+export const dynamic = 'force-dynamic';
 
 export const metadata = { title: 'Sillas | Midgard Mesas de Juego' };
 
@@ -13,7 +17,8 @@ const MEDIDAS = [
 
 const PERSONALIZABLE = ['Tipo de madera', 'Acabado', 'Tono de la madera', 'Tono del tapiz (azul, gris, tinto/rojo y más opciones)'];
 
-export default function SillasPage() {
+export default async function SillasPage() {
+  const prices = await getProductPrices();
   return (
     <div className="flex flex-col items-center">
       {/* Hero */}
@@ -66,11 +71,13 @@ export default function SillasPage() {
             <div className="grid grid-cols-2 gap-4">
               <div className="rounded-2xl border border-midgard-light-gray p-5">
                 <p className="text-sm text-midgard-gray mb-1">Silla individual</p>
-                <p className="text-3xl font-bold text-midgard-steel">$3,200 <span className="text-sm font-normal text-midgard-gray">MXN</span></p>
+                {prices.chair.regularPrice && prices.chair.regularPrice > prices.chair.price && <p className="text-sm text-midgard-gray line-through">{formatMXN(prices.chair.regularPrice)} MXN</p>}
+                <p className="text-3xl font-bold text-midgard-steel">{formatMXN(prices.chair.price)} <span className="text-sm font-normal text-midgard-gray">MXN</span></p>
               </div>
               <div className="rounded-2xl border-2 border-midgard-purple/40 bg-midgard-purple/5 p-5">
                 <p className="text-sm text-midgard-gray mb-1">Paquete de 6 sillas</p>
-                <p className="text-3xl font-bold text-midgard-steel">$17,500 <span className="text-sm font-normal text-midgard-gray">MXN</span></p>
+                {prices.chairPack.regularPrice && prices.chairPack.regularPrice > prices.chairPack.price && <p className="text-sm text-midgard-gray line-through">{formatMXN(prices.chairPack.regularPrice)} MXN</p>}
+                <p className="text-3xl font-bold text-midgard-steel">{formatMXN(prices.chairPack.price)} <span className="text-sm font-normal text-midgard-gray">MXN</span></p>
               </div>
             </div>
 

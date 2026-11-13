@@ -1,6 +1,11 @@
 import Link from 'next/link';
 import { ArrowRight, CheckCircle2, Ruler } from 'lucide-react';
 import ProductGallery from '@/components/ProductGallery';
+import { getProductPrices, formatMXN, discountPct } from '@/lib/productPrices';
+
+// Los precios se editan desde el panel de administración
+export const dynamic = 'force-dynamic';
+
 
 export const metadata = { title: 'Estantes | Midgard Mesas de Juego' };
 
@@ -19,7 +24,9 @@ const CARACTERISTICAS = [
 
 const PERSONALIZABLE = ['Tono de la madera', 'Tipo de barniz (mate o brillante)'];
 
-export default function EstantesPage() {
+export default async function EstantesPage() {
+  const price = (await getProductPrices()).shelf;
+  const pct = discountPct(price);
   return (
     <div className="flex flex-col items-center">
       {/* Hero */}
@@ -78,11 +85,11 @@ export default function EstantesPage() {
             {/* Precio */}
             <div className="rounded-2xl border-2 border-midgard-purple/40 bg-midgard-purple/5 p-5 flex items-center justify-between gap-4">
               <div>
-                <span className="inline-block bg-midgard-purple text-white text-xs font-bold uppercase tracking-wider px-3 py-1 rounded-full mb-2">Buen Fin</span>
-                <p className="text-sm text-midgard-gray line-through">$6,000 MXN</p>
-                <p className="text-4xl font-bold text-midgard-steel">$4,200 <span className="text-sm font-normal text-midgard-gray">MXN</span></p>
+                {pct && <span className="inline-block bg-midgard-purple text-white text-xs font-bold uppercase tracking-wider px-3 py-1 rounded-full mb-2">Buen Fin</span>}
+                {pct && <p className="text-sm text-midgard-gray line-through">{formatMXN(price.regularPrice!)} MXN</p>}
+                <p className="text-4xl font-bold text-midgard-steel">{formatMXN(price.price)} <span className="text-sm font-normal text-midgard-gray">MXN</span></p>
               </div>
-              <span className="text-2xl font-bold text-[#50C878]">-30%</span>
+              {pct && <span className="text-2xl font-bold text-[#50C878]">-{pct}%</span>}
             </div>
 
             {/* Características */}
