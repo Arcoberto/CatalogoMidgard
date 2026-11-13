@@ -115,6 +115,7 @@ function ConfiguradorContent() {
   }, [model, matColor, setMatColor]);
 
   const isAsgard = model === 'Asgard';
+  const [showSummary, setShowSummary] = useState(false); // solo móvil
 
   const acabados: TableFinish[] = ['Mate', 'Semi-Mate', 'Brillante'];
   const estructuras: StructureStyle[] = ['Un sólo tono', 'Bicolor Blanco', 'Bicolor Negro'];
@@ -123,8 +124,8 @@ function ConfiguradorContent() {
     <div className="flex flex-col lg:flex-row min-h-[calc(100vh-80px)] bg-midgard-light-gray">
       
       {/* LEFT PANEL - CONTROLS */}
-      <div className="w-full lg:w-[450px] bg-white border-r border-midgard-light-gray flex flex-col h-[calc(100vh-80px)] overflow-y-auto">
-        <div className="pt-10 pb-6 px-6 border-b border-midgard-light-gray sticky top-0 bg-white z-50">
+      <div className="order-2 lg:order-none w-full lg:w-[450px] bg-white border-r border-midgard-light-gray flex flex-col lg:h-[calc(100vh-80px)] lg:overflow-y-auto pb-24 lg:pb-0">
+        <div className="pt-6 lg:pt-10 pb-4 lg:pb-6 px-6 border-b border-midgard-light-gray lg:sticky top-0 bg-white z-50">
           <h1 className="text-2xl font-bold text-midgard-navy">Configura tu Mesa</h1>
           <p className="text-sm text-midgard-gray">Personaliza cada detalle a tu gusto.</p>
         </div>
@@ -134,7 +135,7 @@ function ConfiguradorContent() {
           {!currentMenu && (
              <div className="flex flex-col items-center justify-center h-full text-midgard-gray gap-4 opacity-50">
                <Info className="w-12 h-12" />
-               <p className="text-center">Selecciona un elemento a la derecha para configurarlo.</p>
+               <p className="text-center">Selecciona un elemento <span className="lg:hidden">en el visor de arriba</span><span className="hidden lg:inline">a la derecha</span> para configurarlo.</p>
              </div>
           )}
 
@@ -612,7 +613,7 @@ function ConfiguradorContent() {
       </div>
 
       {/* RIGHT PANEL - 3D CANVAS & SUMMARY */}
-      <div className="flex-1 relative bg-gradient-to-br from-gray-100 to-gray-200 h-[calc(100vh-80px)] lg:h-auto">
+      <div className="order-1 lg:order-none flex-1 relative bg-gradient-to-br from-gray-100 to-gray-200 h-[58vh] min-h-[360px] lg:min-h-0 lg:h-auto">
         
         {/* 3D Canvas */}
         <div className="absolute inset-0 z-0">
@@ -620,11 +621,11 @@ function ConfiguradorContent() {
         </div>
 
         {/* FLOATING PILL TAGS */}
-        <div className="absolute bottom-6 left-6 z-10 flex flex-col items-start gap-3">
+        <div className="absolute bottom-3 left-3 lg:bottom-6 lg:left-6 z-10 flex flex-col items-start gap-2 lg:gap-3">
           {/* Promoción */}
           <button 
             onClick={() => setShowPromocion(!showPromocion)}
-            className={`flex items-center gap-2 bg-white/95 backdrop-blur-sm px-5 py-2.5 rounded-full border border-[#50C878]/30 shadow-[0_8px_30px_rgba(0,0,0,0.04)] text-[#50C878] font-medium text-xs tracking-wide uppercase transition-all hover:-translate-y-0.5 ${!showPromocion && 'opacity-50 grayscale'}`}
+            className={`flex items-center gap-2 bg-white/95 backdrop-blur-sm px-3 py-1.5 lg:px-5 lg:py-2.5 rounded-full border border-[#50C878]/30 shadow-[0_8px_30px_rgba(0,0,0,0.04)] text-[#50C878] font-medium text-xs tracking-wide uppercase transition-all hover:-translate-y-0.5 ${!showPromocion && 'opacity-50 grayscale'}`}
           >
             <Gift className="w-4 h-4 stroke-[1.5]" />
             <span>Promoción</span>
@@ -633,7 +634,7 @@ function ConfiguradorContent() {
           {/* Más pedido */}
           <button 
             onClick={() => setShowMasPedido(!showMasPedido)}
-            className={`flex items-center gap-2 bg-white/95 backdrop-blur-sm px-5 py-2.5 rounded-full border border-[#E63946]/30 shadow-[0_8px_30px_rgba(0,0,0,0.04)] text-[#E63946] font-medium text-xs tracking-wide uppercase transition-all hover:-translate-y-0.5 ${!showMasPedido && 'opacity-50 grayscale'}`}
+            className={`flex items-center gap-2 bg-white/95 backdrop-blur-sm px-3 py-1.5 lg:px-5 lg:py-2.5 rounded-full border border-[#E63946]/30 shadow-[0_8px_30px_rgba(0,0,0,0.04)] text-[#E63946] font-medium text-xs tracking-wide uppercase transition-all hover:-translate-y-0.5 ${!showMasPedido && 'opacity-50 grayscale'}`}
           >
             <Heart className="w-4 h-4 stroke-[1.5]" />
             <span>Más pedido</span>
@@ -641,11 +642,11 @@ function ConfiguradorContent() {
         </div>
 
         {/* LEFT SIDE FLOATING UI - VIEW PRESETS */}
-        <div className="absolute top-24 left-6 flex flex-col gap-3 z-10 pointer-events-none">
+        <div className="absolute top-3 left-3 lg:top-24 lg:left-6 flex flex-col gap-2 lg:gap-3 z-10 pointer-events-none">
           <button 
             type="button"
             onClick={() => handleProductClick('table')}
-            className={`pointer-events-auto backdrop-blur-md p-3 rounded-2xl shadow-lg transition-all border flex flex-col items-center gap-1 w-20 ${
+            className={`pointer-events-auto backdrop-blur-md p-2 lg:p-3 rounded-2xl shadow-lg transition-all border flex flex-col items-center gap-1 w-16 lg:w-20 ${
               activeProducts.table 
                 ? (currentMenu === 'table' ? 'bg-midgard-navy text-white border-midgard-navy scale-105' : 'bg-white/90 text-midgard-navy border-midgard-navy ring-2 ring-midgard-navy ring-inset hover:scale-105') 
                 : 'bg-white/50 text-gray-400 border-white/50 hover:bg-white/90 hover:text-midgard-navy'
@@ -659,7 +660,7 @@ function ConfiguradorContent() {
           <button 
             type="button"
             onClick={() => handleProductClick('shelf')}
-            className={`pointer-events-auto backdrop-blur-md p-3 rounded-2xl shadow-lg transition-all border flex flex-col items-center gap-1 w-20 ${
+            className={`pointer-events-auto backdrop-blur-md p-2 lg:p-3 rounded-2xl shadow-lg transition-all border flex flex-col items-center gap-1 w-16 lg:w-20 ${
               activeProducts.shelf 
                 ? (currentMenu === 'shelf' ? 'bg-midgard-navy text-white border-midgard-navy scale-105' : 'bg-white/90 text-midgard-navy border-midgard-navy ring-2 ring-midgard-navy ring-inset hover:scale-105') 
                 : 'bg-white/50 text-gray-400 border-white/50 hover:bg-white/90 hover:text-midgard-navy'
@@ -673,7 +674,7 @@ function ConfiguradorContent() {
           <button 
             type="button"
             onClick={() => handleProductClick('desk')}
-            className={`pointer-events-auto backdrop-blur-md p-3 rounded-2xl shadow-lg transition-all border flex flex-col items-center gap-1 w-20 ${
+            className={`pointer-events-auto backdrop-blur-md p-2 lg:p-3 rounded-2xl shadow-lg transition-all border flex flex-col items-center gap-1 w-16 lg:w-20 ${
               activeProducts.desk 
                 ? (currentMenu === 'desk' ? 'bg-midgard-navy text-white border-midgard-navy scale-105' : 'bg-white/90 text-midgard-navy border-midgard-navy ring-2 ring-midgard-navy ring-inset hover:scale-105') 
                 : 'bg-white/50 text-gray-400 border-white/50 hover:bg-white/90 hover:text-midgard-navy'
@@ -686,7 +687,7 @@ function ConfiguradorContent() {
         </div>
 
         {/* RIGHT SIDE FLOATING UI */}
-        <div className="absolute bottom-6 right-6 flex flex-col items-end gap-3 z-10">
+        <div className={`absolute top-3 right-3 lg:top-auto lg:bottom-6 lg:right-6 flex flex-col items-end gap-3 ${showSummary ? 'z-[60]' : 'z-10'} lg:z-10`}>
           
           {/* SELECTOR DE CÁMARAS */}
           <div className="flex items-center gap-2">
@@ -695,30 +696,38 @@ function ConfiguradorContent() {
                 { id: 'general', label: 'Cámara 1' },
                 { id: 'frontal', label: 'Cámara 2' },
                 { id: 'superior', label: 'Cámara 3' },
-              ].map((v) => (
+              ].map((v, i) => (
                 <button
                   key={v.id}
                   onClick={() => window.dispatchEvent(new CustomEvent('set-camera-view', { detail: v.id }))}
-                  className="px-3 py-2 text-xs font-semibold text-midgard-navy rounded-full hover:bg-midgard-navy hover:text-white transition-colors"
+                  className="px-2.5 lg:px-3 py-1.5 lg:py-2 text-xs font-semibold text-midgard-navy rounded-full hover:bg-midgard-navy hover:text-white transition-colors"
                   title={v.id === 'general' ? 'Vista general' : v.id === 'frontal' ? 'Vista frontal' : 'Vista superior'}
                 >
-                  {v.label}
+                  <span className="lg:hidden">Cám {i + 1}</span>
+                  <span className="hidden lg:inline">{v.label}</span>
                 </button>
               ))}
             </div>
             <button 
               onClick={() => window.dispatchEvent(new Event('reset-camera'))}
-              className="bg-white/90 backdrop-blur-md p-3 rounded-full shadow-lg hover:bg-white transition-colors flex items-center justify-center gap-2 border border-white/50 text-midgard-navy"
+              className="bg-white/90 backdrop-blur-md p-2 lg:p-3 rounded-full shadow-lg hover:bg-white transition-colors flex items-center justify-center gap-2 border border-white/50 text-midgard-navy"
               title="Centrar Cámara"
             >
-              <Video className="w-5 h-5" />
+              <Video className="w-5 h-5 hidden lg:block" />
               <RefreshCw className="w-5 h-5" />
             </button>
           </div>
 
           {/* SUMMARY CARD */}
-          <div className="w-80 bg-white/90 backdrop-blur-md p-6 rounded-2xl shadow-2xl border border-white/50 max-h-[80vh] overflow-y-auto">
-            <h3 className="text-lg font-bold text-midgard-navy mb-4 border-b pb-2">Resumen</h3>
+          {/* Fondo oscuro del resumen en móvil */}
+          {showSummary && (
+            <div className="lg:hidden fixed inset-0 bg-black/40" onClick={() => setShowSummary(false)} aria-hidden="true" />
+          )}
+          <div className={`${showSummary ? 'block' : 'hidden'} lg:block fixed lg:static inset-x-0 bottom-0 w-full lg:w-80 bg-white lg:bg-white/90 backdrop-blur-md p-6 rounded-t-2xl lg:rounded-2xl shadow-2xl border border-white/50 max-h-[80vh] overflow-y-auto`}>
+            <div className="flex items-center justify-between mb-4 border-b pb-2">
+              <h3 className="text-lg font-bold text-midgard-navy">Resumen</h3>
+              <button onClick={() => setShowSummary(false)} className="lg:hidden text-midgard-gray text-2xl leading-none px-2" aria-label="Cerrar resumen">×</button>
+            </div>
             
             <div className="space-y-2 mb-4">
             <div className="flex justify-between text-sm">
@@ -875,6 +884,20 @@ function ConfiguradorContent() {
         </div>
         {/* END RIGHT SIDE FLOATING UI */}
         </div>
+
+        {/* BARRA INFERIOR MÓVIL: total + abrir resumen */}
+        {!showSummary && (
+          <button
+            onClick={() => setShowSummary(true)}
+            className="lg:hidden fixed bottom-0 inset-x-0 z-40 bg-midgard-navy text-white px-6 py-4 flex items-center justify-between shadow-[0_-8px_30px_rgba(0,0,0,0.15)]"
+          >
+            <span className="text-sm font-semibold uppercase tracking-wide">Ver resumen</span>
+            <span className="font-bold flex items-center gap-1">
+              ${(getTotalPrice() + shippingCost).toLocaleString('en-US')} MXN
+              <ChevronRight className="w-4 h-4 -rotate-90" />
+            </span>
+          </button>
+        )}
 
       </div>
 
