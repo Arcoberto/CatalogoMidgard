@@ -108,7 +108,7 @@ const FAQ_DATA: FaqCategory[] = [
               <li>Consulta de la agenda de pedidos para confirmar la fecha aproximada de entrega.</li>
               <li>Plan de pago acordado. La mayoría de los pedidos se dividen en dos pagos, pero en casos de montos superiores a $15,000 pesos, se crea un plan personalizado de tres pagos.</li>
               <li>Los pagos pueden tener un periodo de 15 a 20 días entre ellos. Si te encuentras en Guadalajara, el último pago es <strong className="text-midgard-steel">contra entrega</strong>. Si estás fuera de Guadalajara, se efectúa una vez que tengamos evidencia de que la mesa está terminada (videollamada o fotografías).</li>
-              <li>Una vez confirmado el pago, procedemos a embalar la mesa. Nuestra paquetería <strong className="text-midgard-steel">"Castores"</strong> resguarda la mesa hasta confirmar el pago, luego la embarca y genera un número de guía rastreable desde <a href="https://www.castores.com.mx" target="_blank" rel="noopener noreferrer" className="underline hover:text-midgard-navy">castores.com.mx</a>. Este número también sirve como garantía del producto.</li>
+              <li>Una vez confirmado el pago, procedemos a embalar la mesa. Nuestra paquetería <strong className="text-midgard-steel">"Tres Guerras"</strong> resguarda la mesa hasta confirmar el pago, luego la embarca y genera un número de guía rastreable desde <a href="https://www.tresguerras.com.mx" target="_blank" rel="noopener noreferrer" className="underline hover:text-midgard-navy">tresguerras.com.mx</a>. Este número también sirve como garantía del producto.</li>
             </ol>
           </div>
         ),
@@ -162,7 +162,7 @@ const FAQ_DATA: FaqCategory[] = [
         question: "¿Hacen envíos fuera de Guadalajara?",
         answer: (
           <p className="text-midgard-gray leading-relaxed">
-            Sí, realizamos envíos a otras ubicaciones. Sin embargo, los gastos de envío corren por cuenta del cliente. Utilizamos la paquetería externa <strong className="text-midgard-steel">"Castores"</strong>, que ofrece garantía de viaje seguro y entrega a la puerta de tu casa. Para cotizar el envío, necesitamos conocer tu código postal y la colonia de destino.
+            Sí, realizamos envíos a otras ubicaciones. Sin embargo, los gastos de envío corren por cuenta del cliente. Utilizamos la paquetería externa <strong className="text-midgard-steel">"Tres Guerras"</strong>, que ofrece garantía de viaje seguro y entrega a la puerta de tu casa. Para cotizar el envío, necesitamos conocer tu código postal y la colonia de destino.
           </p>
         ),
       },

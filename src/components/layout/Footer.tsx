@@ -42,7 +42,7 @@ export function Footer() {
             <h3 className="text-white font-semibold mb-4 uppercase tracking-wider text-sm">Contacto</h3>
             <ul className="space-y-3 text-sm text-midgard-gray">
               <li>Guadalajara, Jalisco, México</li>
-              <li>Envíos a toda la República (Transportes Castores)</li>
+              <li>Envíos a toda la República (Paquetería Tres Guerras)</li>
               <li className="pt-2">
                 <a href="https://wa.me/523314137429" className="text-white hover:text-midgard-purple transition-colors flex items-center gap-2">
                   <span>WhatsApp: +52 33 1413 7429</span>
