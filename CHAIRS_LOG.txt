@@ -1,0 +1,222 @@
+--- STEP 2294 ---
+Created At: 2026-07-14T18:26:16Z
+Completed At: 2026-07-14T18:26:17Z
+The following changes were made by the multi_replace_file_content tool to: C:\Users\el_ar\.gemini\antigravity\scratch\midgard-mesas\src\components\3d\TableViewer3D.tsx. If relevant, proactively run terminal commands to execute this code for the USER. Don't ask for permission.
+[diff_block_start]
+@@ -462,7 +462,7 @@
+   
+   // SILLA 6 (Cabecera B)
+   const cab2_x = -0.15; // 1.90m de distancia de la Cabecera D (1.70 mesa + offsets)
+-  const cab2_z = -0.5; // 30cm a la derecha respecto al eje de la silla 5
++  const cab2_z = -0.4; // Ajuste final de 10cm extra a la derecha
+ 
+   // Lógica de llenado de slots fijos (1 a 1, sin recalcular nada)
+   if (chairsCount >= 1) positions.push({ pos: [s1_x, 0, s1_z], rot: [0, Math.PI, 0] });
+[diff_block_end]
+
+Please note that the above snippet only shows the MODIFIED lines from the last change. It shows up to 3 lines of unchanged lines before and after the modified lines. The actual file contents may have many more lines not shown.
+--- STEP 2300 ---
+Created At: 2026-07-14T18:26:40Z
+Completed At: 2026-07-14T18:26:40Z
+The following changes were made by the multi_replace_file_content tool to: C:\Users\el_ar\.gemini\antigravity\scratch\midgard-mesas\src\components\3d\TableViewer3D.tsx. If relevant, proactively run terminal commands to execute this code for the USER. Don't ask for permission.
+[diff_block_start]
+@@ -462,7 +462,7 @@
+   
+   // SILLA 6 (Cabecera B)
+   const cab2_x = -0.15; // 1.90m de distancia de la Cabecera D (1.70 mesa + offsets)
+-  const cab2_z = -0.4; // Ajuste final de 10cm extra a la derecha
++  const cab2_z = -0.35; // Ajuste final de 5cm extra a la derecha
+ 
+   // Lógica de llenado de slots fijos (1 a 1, sin recalcular nada)
+   if (chairsCount >= 1) positions.push({ pos: [s1_x, 0, s1_z], rot: [0, Math.PI, 0] });
+[diff_block_end]
+
+Please note that the above snippet only shows the MODIFIED lines from the last change. It shows up to 3 lines of unchanged lines before and after the modified lines. The actual file contents may have many more lines not shown.
+--- STEP 2204 ---
+{"Description":"Rewrite ChairsGroup to use explicit coordinates for each of the 6 spots","Instruction":"Reescribir ChairsGroup para que cada una de las 6 sillas tenga sus propias variables X y Z. Esto es necesario porque el punto de origen de Silla.glb es totalmente asimétrico.","ReplacementChunks":[{"AllowMultiple":false,"EndLine":463,"ReplacementContent":"function ChairsGroup({ woodTex, feltTex, chairsCount }: { woodTex: any, feltTex: any, chairsCount: number }) {\n  const positions: Array<{ pos: [number, number, number], rot: [number, number, number] }> = [];\n\n  // Variables individuales por cada posición (debido a asimetría severa en el eje X y Z del modelo de SketchUp)\n  \n  // SILLA 1 (Lado A, frente a la mesa) - Aprobada por el usuario\n  const s1_x = 0.65;\n  const s1_z = 0.1;\n\n  // SILLA 2 (Lado C, opuesta a Silla 1) - Distancia Z aprox 100cm, corregimos X por asimetría de la silla\n  const s2_x = 0.25; // Aproximadamente -40cm del X de Silla 1 para alinearla enfrente\n  const s2_z = -0.9; // 1 metro de distancia de Silla 1\n\n  // SILLAS 3 y 4 (Cuando hay 2 sillas del Lado A, y 2 del Lado C)\n  // Lado A:\n  const s3_x = s1_x - 0.4;\n  const s3_z = s1_z;\n  const s4_x = s1_x + 0.4;\n  const s4_z = s1_z;\n  \n  // Lado C:\n  const s5_x = s2_x - 0.4;\n  const s5_z = s2_z;\n  const s6_x = s2_x + 0.4;\n  const s6_z = s2_z;\n\n  // Cabeceras (X positivo y X negativo)\n  const cab1_x = 1.35 + 0.65; // offset + centroX aprox\n  const cab1_z = -0.4; // Centro Z de la mesa aprox (-0.4 porque es a la mitad de 0.1 y -0.9)\n  \n  const cab2_x = -1.35 + 0.65;\n  const cab2_z = -0.4;\n\n  if (chairsCount === 1) {\n    positions.push({ pos: [s1_x, 0, s1_z], rot: [0, Math.PI, 0] });\n  } else if (chairsCount === 2) {\n    positions.push({ pos: [s1_x, 0, s1_z], rot: [0, Math.PI, 0] });\n    positions.push({ pos: [s2_x, 0, s2_z], rot: [0, 0, 0] });\n  } else if (chairsCount === 3) {\n    positions.push({ pos: [s3_x, 0, s3_z], rot: [0, Math.PI, 0] });\n    positions.push({ pos: [s4_x, 0, s4_z], rot: [0, Math.PI, 0] });\n    positions.push({ pos: [s2_x, 0, s2_z], rot: [0, 0, 0] });\n  } else if (chairsCount >= 4) {\n    positions.push({ pos: [s3_x, 0, s3_z], rot: [0, Math.PI, 0] });\n    positions.push({ pos: [s4_x, 0, s4_z], rot: [0, Math.PI, 0] });\n    positions.push({ pos: [s5_x, 0, s5_z], rot: [0, 0, 0] });\n    positions.push({ pos: [s6_x, 0, s6_z], rot: [0, 0, 0] });\n  }\n  \n  if (chairsCount >= 5) {\n    positions.push({ pos: [cab1_x, 0, cab1_z], rot: [0, -Math.PI / 2, 0] });\n  }\n  if (chairsCount === 6) {\n    positions.push({ pos: [cab2_x, 0, cab2_z], rot: [0, Math.PI / 2, 0] });\n  }","StartLine":438,"TargetContent":"function ChairsGroup({ woodTex, feltTex, chairsCount }: { woodTex: any, feltTex: any, chairsCount: number }) {\n  const positions: Array<{ pos: [number, number, number], rot: [number, number, number] }> = [];\n\n  // Al tener el origen geométrico descentrado en el GLB, necesitamos offsets independientes por cara\n  const offsetSide1 = 0.1; // Lado A (Z Positivo, rot 180). \n  const offsetSide2 = 0.1; // Lado C (Z Negativo, rot 0).\n  const offsetHead1 = 0.45; // Cabecera D (X Positivo, rot -90)\n  const offsetHead2 = 0.45; // Cabecera B (X Negativo, rot 90)\n\n  // Usamos un offset manual en X porque la mesa está descentrada en SketchUp\n  const cx = 0.65;\n  const cz = 0;\n\n  if (chairsCount === 1) {\n    positions.push({ pos: [cx, 0, cz + offsetSide1], rot: [0, Math.PI, 0] });\n  } else if (chairsCount === 2) {\n    positions.push({ pos: [cx, 0, cz + offsetSide1], rot: [0, Math.PI, 0] });\n    positions.push({ pos: [cx, 0, cz - offsetSide2], rot: [0, 0, 0] });\n  } else if (chairsCount === 3) {\n    positions.push({ pos: [cx - 0.4, 0, cz + offsetSide1], rot: [0, Math.PI, 0] });\n    positions.push({ pos: [cx + 0.4, 0, cz + offsetSide1], rot: [0, Math.PI, 0] });\n    positions.push({ pos: [cx, 0, cz - offsetSide2], rot: [0, 0, 0] });\n  } else if (chairsCount >= 4) {\n    positions.push({ pos: [cx - 0.4, 0, cz + offsetSide1], rot: [0, Math.PI, 0] });\n    positions.push({ pos: [cx + 0.4, 0, cz + offsetSide1], rot: [0, Math.PI, 0] });\n    positions.push({ pos: [cx - 0.4, 0, cz - offsetSide2], rot: [0, 0, 0] });\n    positions.push({ pos: [cx + 0.4, 0, cz - offsetSide2], rot: [0, 0, 0] });\n  }\n  \n  if (chairsCount >= 5) {\n    positions.push({ pos: [cx + offsetHead1, 0, cz], rot: [0, -Math.PI / 2, 0] });\n  }\n  if (chairsCount === 6) {\n    positions.push({ pos: [cx - offsetHead2, 0, cz], rot: [0, Math.PI / 2, 0] });\n  }"}],"TargetFile":"C:\\Users\\el_ar\\.gemini\\antigravity\\scratch\\midgard-mesas\\src\\components\\3d\\TableViewer3D.tsx","toolAction":"Separate chair coordinates completely","toolSummary":"Separate coordinates"}
+--- STEP 2205 ---
+Created At: 2026-07-14T17:57:39Z
+Completed At: 2026-07-14T17:57:39Z
+The following changes were made by the multi_replace_file_content tool to: C:\Users\el_ar\.gemini\antigravity\scratch\midgard-mesas\src\components\3d\TableViewer3D.tsx. If relevant, proactively run terminal commands to execute this code for the USER. Don't ask for permission.
+[diff_block_start]
+@@ -438,37 +438,57 @@
+ function ChairsGroup({ woodTex, feltTex, chairsCount }: { woodTex: any, feltTex: any, chairsCount: number }) {
+   const positions: Array<{ pos: [number, number, number], rot: [number, number, number] }> = [];
+ 
+-  // Al tener el origen geométrico descentrado en el GLB, necesitamos offsets independientes por cara
+-  const offsetSide1 = 0.1; // Lado A (Z Positivo, rot 180). 
+-  const offsetSide2 = 0.1; // Lado C (Z Negativo, rot 0).
+-  const offsetHead1 = 0.45; // Cabecera D (X Positivo, rot -90)
+-  const offsetHead2 = 0.45; // Cabecera B (X Negativo, rot 90)
+-
+-  // Usamos un offset manual en X porque la mesa está descentrada en SketchUp
+-  const cx = 0.65;
+-  const cz = 0;
++  // Variables individuales por cada posición (debido a asimetría severa en el eje X y Z del modelo de SketchUp)
++  
++  // SILLA 1 (Lado A, frente a la mesa) - Aprobada por el usuario
++  const s1_x = 0.65;
++  const s1_z = 0.1;
++
++  // SILLA 2 (Lado C, opuesta a Silla 1) - Distancia Z aprox 100cm, corregimos X por asimetría de la silla
++  const s2_x = 0.25; // Aproximadamente -40cm del X de Silla 1 para alinearla enfrente
++  const s2_z = -0.9; // 1 metro de distancia de Silla 1
++
++  // SILLAS 3 y 4 (Cuando hay 2 sillas del Lado A, y 2 del Lado C)
++  // Lado A:
++  const s3_x = s1_x - 0.4;
++  const s3_z = s1_z;
++  const s4_x = s1_x + 0.4;
++  const s4_z = s1_z;
++  
++  // Lado C:
++  const s5_x = s2_x - 0.4;
++  const s5_z = s2_z;
++  const s6_x = s2_x + 0.4;
++  const s6_z = s2_z;
++
++  // Cabeceras (X positivo y X negativo)
++  const cab1_x = 1.35 + 0.65; // offset + centroX aprox
++  const cab1_z = -0.4; // Centro Z de la mesa aprox (-0.4 porque es a la mitad de 0.1 y -0.9)
++  
++  const cab2_x = -1.35 + 0.65;
++  const cab2_z = -0.4;
+ 
+   if (chairsCount === 1) {
+-    positions.push({ pos: [cx, 0, cz + offsetSide1], rot: [0, Math.PI, 0] });
++    positions.push({ pos: [s1_x, 0, s1_z], rot: [0, Math.PI, 0] });
+   } else if (chairsCount === 2) {
+-    positions.push({ pos: [cx, 0, cz + offsetSide1], rot: [0, Math.PI, 0] });
+-    positions.push({ pos: [cx, 0, cz - offsetSide2], rot: [0, 0, 0] });
++    positions.push({ pos: [s1_x, 0, s1_z], rot: [0, Math.PI, 0] });
++    positions.push({ pos: [s2_x, 0, s2_z], rot: [0, 0, 0] });
+   } else if (chairsCount === 3) {
+-    positions.push({ pos: [cx - 0.4, 0, cz + offsetSide1], rot: [0, Math.PI, 0] });
+-    positions.push({ pos: [cx + 0.4, 0, cz + offsetSide1], rot: [0, Math.PI, 0] });
+-    positions.push({ pos: [cx, 0, cz - offsetSide2], rot: [0, 0, 0] });
++    positions.push({ pos: [s3_x, 0, s3_z], rot: [0, Math.PI, 0] });
++    positions.push({ pos: [s4_x, 0, s4_z], rot: [0, Math.PI, 0] });
++    positions.push({ pos: [s2_x, 0, s2_z], rot: [0, 0, 0] });
+   } else if (chairsCount >= 4) {
+-    positions.push({ pos: [cx - 0.4, 0, cz + offsetSide1], rot: [0, Math.PI, 0] });
+-    positions.push({ pos: [cx + 0.4, 0, cz + offsetSide1], rot: [0, Math.PI, 0] });
+-    positions.push({ pos: [cx - 0.4, 0, cz - offsetSide2], rot: [0, 0, 0] });
+-    positions.push({ pos: [cx + 0.4, 0, cz - offsetSide2], rot: [0, 0, 0] });
++    positions.push({ pos: [s3_x, 0, s3_z], rot: [0, Math.PI, 0] });
++    positions.push({ pos: [s4_x, 0, s4_z], rot: [0, Math.PI, 0] });
++    positions.push({ pos: [s5_x, 0, s5_z], rot: [0, 0, 0] });
++    positions.push({ pos: [s6_x, 0, s6_z], rot: [0, 0, 0] });
+   }
+   
+   if (chairsCount >= 5) {
+-    positions.push({ pos: [cx + offsetHead1, 0, cz], rot: [0, -Math.PI / 2, 0] });
++    positions.push({ pos: [cab1_x, 0, cab1_z], rot: [0, -Math.PI / 2, 0] });
+   }
+   if (chairsCount === 6) {
+-    positions.push({ pos: [cx - offsetHead2, 0, cz], rot: [0, Math.PI / 2, 0] });
++    positions.push({ pos: [cab2_x, 0, cab2_z], rot: [0, Math.PI / 2, 0] });
+   }
+ 
+   return (
+[diff_block_end]
+
+Please note that the above snippet only shows the MODIFIED lines from the last change. It shows up to 3 lines of unchanged lines before and after the modified lines. The actual file contents may have many more lines not shown.
+--- STEP 2233 ---
+{"Description":"Make chairs use fixed slots so they never move when adding more","Instruction":"Reescribir ChairsGroup para que las sillas usen 6 slots fijos predefinidos. De esta manera, agregar una silla nueva simplemente la hace aparecer en su slot sin mover a las demás (evitando el re-centrado dinámico que no le gustó al usuario).","ReplacementChunks":[{"AllowMultiple":false,"EndLine":463,"ReplacementContent":"function ChairsGroup({ woodTex, feltTex, chairsCount }: { woodTex: any, feltTex: any, chairsCount: number }) {\n  const positions: Array<{ pos: [number, number, number], rot: [number, number, number] }> = [];\n\n  // SLOTS FIJOS: Al definir slots fijos, ninguna silla se moverá de su lugar cuando agregues otra.\n  \n  // SILLA 1 (Lado A) - Confirmada por el usuario\n  const s1_x = 0.65;\n  const s1_z = 0.1;\n\n  // SILLA 2 (Lado C) - Confirmada por el usuario\n  const s2_x = 0.25;\n  const s2_z = -1.3;\n\n  // SILLA 3 (Lado A, junto a la Silla 1)\n  const s3_x = 0.05; // Ajustado para que no choque con la Silla 1\n  const s3_z = 0.1;\n  \n  // SILLA 4 (Lado C, junto a la Silla 2)\n  const s4_x = 0.85; // Ajustado para que no choque con la Silla 2\n  const s4_z = -1.3;\n\n  // SILLA 5 (Cabecera D)\n  const cab1_x = 1.35;\n  const cab1_z = -0.6; // Centro Z de la mesa aprox\n  \n  // SILLA 6 (Cabecera B)\n  const cab2_x = -0.45;\n  const cab2_z = -0.6;\n\n  // Lógica de llenado de slots fijos (1 a 1, sin recalcular nada)\n  if (chairsCount >= 1) positions.push({ pos: [s1_x, 0, s1_z], rot: [0, Math.PI, 0] });\n  if (chairsCount >= 2) positions.push({ pos: [s2_x, 0, s2_z], rot: [0, 0, 0] });\n  if (chairsCount >= 3) positions.push({ pos: [s3_x, 0, s3_z], rot: [0, Math.PI, 0] });\n  if (chairsCount >= 4) positions.push({ pos: [s4_x, 0, s4_z], rot: [0, 0, 0] });\n  if (chairsCount >= 5) positions.push({ pos: [cab1_x, 0, cab1_z], rot: [0, -Math.PI / 2, 0] });\n  if (chairsCount >= 6) positions.push({ pos: [cab2_x, 0, cab2_z], rot: [0, Math.PI / 2, 0] });","StartLine":438,"TargetContent":"function ChairsGroup({ woodTex, feltTex, chairsCount }: { woodTex: any, feltTex: any, chairsCount: number }) {\n  const positions: Array<{ pos: [number, number, number], rot: [number, number, number] }> = [];\n\n  // Variables individuales por cada posición (debido a asimetría severa en el eje X y Z del modelo de SketchUp)\n  \n  // SILLA 1 (Lado A, frente a la mesa) - Aprobada por el usuario\n  const s1_x = 0.65;\n  const s1_z = 0.1;\n\n  // SILLA 2 (Lado C, opuesta a Silla 1) - Distancia Z aprox 100cm, corregimos X por asimetría de la silla\n  const s2_x = 0.25; // Aproximadamente -40cm del X de Silla 1 para alinearla enfrente\n  const s2_z = -1.3; // Ajuste final de 10cm hacia adelante\n\n  // SILLAS 3 y 4 (Cuando hay 2 sillas del Lado A, y 2 del Lado C)\n  // Lado A:\n  const s3_x = s1_x - 0.4;\n  const s3_z = s1_z;\n  const s4_x = s1_x + 0.4;\n  const s4_z = s1_z;\n  \n  // Lado C:\n  const s5_x = s2_x - 0.4;\n  const s5_z = s2_z;\n  const s6_x = s2_x + 0.4;\n  const s6_z = s2_z;\n\n  // Cabeceras (X positivo y X negativo)\n  const cab1_x = 1.35 + 0.65; // offset + centroX aprox\n  const cab1_z = -0.4; // Centro Z de la mesa aprox (-0.4 porque es a la mitad de 0.1 y -0.9)\n  \n  const cab2_x = -1.35 + 0.65;\n  const cab2_z = -0.4;\n\n  if (chairsCount === 1) {\n    positions.push({ pos: [s1_x, 0, s1_z], rot: [0, Math.PI, 0] });\n  } else if (chairsCount === 2) {\n    positions.push({ pos: [s1_x, 0, s1_z], rot: [0, Math.PI, 0] });\n    positions.push({ pos: [s2_x, 0, s2_z], rot: [0, 0, 0] });\n  } else if (chairsCount === 3) {\n    positions.push({ pos: [s3_x, 0, s3_z], rot: [0, Math.PI, 0] });\n    positions.push({ pos: [s4_x, 0, s4_z], rot: [0, Math.PI, 0] });\n    positions.push({ pos: [s2_x, 0, s2_z], rot: [0, 0, 0] });\n  } else if (chairsCount >= 4) {\n    positions.push({ pos: [s3_x, 0, s3_z], rot: [0, Math.PI, 0] });\n    positions.push({ pos: [s4_x, 0, s4_z], rot: [0, Math.PI, 0] });\n    positions.push({ pos: [s5_x, 0, s5_z], rot: [0, 0, 0] });\n    positions.push({ pos: [s6_x, 0, s6_z], rot: [0, 0, 0] });\n  }\n  \n  if (chairsCount >= 5) {\n    positions.push({ pos: [cab1_x, 0, cab1_z], rot: [0, -Math.PI / 2, 0] });\n  }\n  if (chairsCount === 6) {\n    positions.push({ pos: [cab2_x, 0, cab2_z], rot: [0, Math.PI / 2, 0] });\n  }"}],"TargetFile":"C:\\Users\\el_ar\\.gemini\\antigravity\\scratch\\midgard-mesas\\src\\components\\3d\\TableViewer3D.tsx","toolAction":"Make chair slots fixed","toolSummary":"Fixed chair slots"}
+--- STEP 2234 ---
+Created At: 2026-07-14T18:10:02Z
+Completed At: 2026-07-14T18:10:02Z
+The following changes were made by the multi_replace_file_content tool to: C:\Users\el_ar\.gemini\antigravity\scratch\midgard-mesas\src\components\3d\TableViewer3D.tsx. If relevant, proactively run terminal commands to execute this code for the USER. Don't ask for permission.
+[diff_block_start]
+@@ -438,58 +438,39 @@
+ function ChairsGroup({ woodTex, feltTex, chairsCount }: { woodTex: any, feltTex: any, chairsCount: number }) {
+   const positions: Array<{ pos: [number, number, number], rot: [number, number, number] }> = [];
+ 
+-  // Variables individuales por cada posición (debido a asimetría severa en el eje X y Z del modelo de SketchUp)
+-  
+-  // SILLA 1 (Lado A, frente a la mesa) - Aprobada por el usuario
++  // SLOTS FIJOS: Al definir slots fijos, ninguna silla se moverá de su lugar cuando agregues otra.
++  
++  // SILLA 1 (Lado A) - Confirmada por el usuario
+   const s1_x = 0.65;
+   const s1_z = 0.1;
+ 
+-  // SILLA 2 (Lado C, opuesta a Silla 1) - Distancia Z aprox 100cm, corregimos X por asimetría de la silla
+-  const s2_x = 0.25; // Aproximadamente -40cm del X de Silla 1 para alinearla enfrente
+-  const s2_z = -1.3; // Ajuste final de 10cm hacia adelante
+-
+-  // SILLAS 3 y 4 (Cuando hay 2 sillas del Lado A, y 2 del Lado C)
+-  // Lado A:
+-  const s3_x = s1_x - 0.4;
+-  const s3_z = s1_z;
+-  const s4_x = s1_x + 0.4;
+-  const s4_z = s1_z;
+-  
+-  // Lado C:
+-  const s5_x = s2_x - 0.4;
+-  const s5_z = s2_z;
+-  const s6_x = s2_x + 0.4;
+-  const s6_z = s2_z;
+-
+-  // Cabeceras (X positivo y X negativo)
+-  const cab1_x = 1.35 + 0.65; // offset + centroX aprox
+-  const cab1_z = -0.4; // Centro Z de la mesa aprox (-0.4 porque es a la mitad de 0.1 y -0.9)
+-  
+-  const cab2_x = -1.35 + 0.65;
+-  const cab2_z = -0.4;
+-
+-  if (chairsCount === 1) {
+-    positions.push({ pos: [s1_x, 0, s1_z], rot: [0, Math.PI, 0] });
+-  } else if (chairsCount === 2) {
+-    positions.push({ pos: [s1_x, 0, s1_z], rot: [0, Math.PI, 0] });
+-    positions.push({ pos: [s2_x, 0, s2_z], rot: [0, 0, 0] });
+-  } else if (chairsCount === 3) {
+-    positions.push({ pos: [s3_x, 0, s3_z], rot: [0, Math.PI, 0] });
+-    positions.push({ pos: [s4_x, 0, s4_z], rot: [0, Math.PI, 0] });
+-    positions.push({ pos: [s2_x, 0, s2_z], rot: [0, 0, 0] });
+-  } else if (chairsCount >= 4) {
+-    positions.push({ pos: [s3_x, 0, s3_z], rot: [0, Math.PI, 0] });
+-    positions.push({ pos: [s4_x, 0, s4_z], rot: [0, Math.PI, 0] });
+-    positions.push({ pos: [s5_x, 0, s5_z], rot: [0, 0, 0] });
+-    positions.push({ pos: [s6_x, 0, s6_z], rot: [0, 0, 0] });
+-  }
+-  
+-  if (chairsCount >= 5) {
+-    positions.push({ pos: [cab1_x, 0, cab1_z], rot: [0, -Math.PI / 2, 0] });
+-  }
+-  if (chairsCount === 6) {
+-    positions.push({ pos: [cab2_x, 0, cab2_z], rot: [0, Math.PI / 2, 0] });
+-  }
++  // SILLA 2 (Lado C) - Confirmada por el usuario
++  const s2_x = 0.25;
++  const s2_z = -1.3;
++
++  // SILLA 3 (Lado A, junto a la Silla 1)
++  const s3_x = 0.05; // Ajustado para que no choque con la Silla 1
++  const s3_z = 0.1;
++  
++  // SILLA 4 (Lado C, junto a la Silla 2)
++  const s4_x = 0.85; // Ajustado para que no choque con la Silla 2
++  const s4_z = -1.3;
++
++  // SILLA 5 (Cabecera D)
++  const cab1_x = 1.35;
++  const cab1_z = -0.6; // Centro Z de la mesa aprox
++  
++  // SILLA 6 (Cabecera B)
++  const cab2_x = -0.45;
++  const cab2_z = -0.6;
++
++  // Lógica de llenado de slots fijos (1 a 1, sin recalcular nada)
++  if (chairsCount >= 1) positions.push({ pos: [s1_x, 0, s1_z], rot: [0, Math.PI, 0] });
++  if (chairsCount >= 2) positions.push({ pos: [s2_x, 0, s2_z], rot: [0, 0, 0] });
++  if (chairsCount >= 3) positions.push({ pos: [s3_x, 0, s3_z], rot: [0, Math.PI, 0] });
++  if (chairsCount >= 4) positions.push({ pos: [s4_x, 0, s4_z], rot: [0, 0, 0] });
++  if (chairsCount >= 5) positions.push({ pos: [cab1_x, 0, cab1_z], rot: [0, -Math.PI / 2, 0] });
++  if (chairsCount >= 6) positions.push({ pos: [cab2_x, 0, cab2_z], rot: [0, Math.PI / 2, 0] });
+ 
+   return (
+     <group>
+[diff_block_end]
+
+Please note that the above snippet only shows the MODIFIED lines from the last change. It shows up to 3 lines of unchanged lines before and after the modified lines. The actual file contents may have many more lines not shown.

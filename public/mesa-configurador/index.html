@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Configurador de Mesa</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Segoe UI',sans-serif;background:#1a1a1a;color:#eee;display:flex;height:100vh;overflow:hidden;}
+#panel{width:290px;min-width:290px;background:#222;padding:16px;overflow-y:auto;border-right:1px solid #333;display:flex;flex-direction:column;gap:16px;}
+#panel h1{font-size:16px;font-weight:700;letter-spacing:2px;color:#fff;}
+#panel h1 span{color:#c8a96e;}
+.sec-titulo{font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#777;padding-bottom:4px;border-bottom:1px solid #333;margin-bottom:4px;}
+.btns-row{display:flex;gap:6px;}
+.btn-modelo{flex:1;padding:8px;border:2px solid #444;background:#2a2a2a;color:#ccc;border-radius:7px;cursor:pointer;font-size:12px;font-weight:600;transition:all .2s;}
+.btn-modelo:hover,.btn-modelo.activo{border-color:#c8a96e;color:#c8a96e;background:#2d2618;}
+.swatches{display:flex;flex-wrap:wrap;gap:7px;}
+.swatch{width:46px;height:46px;border-radius:6px;cursor:pointer;border:2px solid transparent;transition:all .2s;overflow:hidden;position:relative;}
+.swatch img{width:100%;height:100%;object-fit:cover;}
+.swatch:hover,.swatch.activo{border-color:#c8a96e;box-shadow:0 0 6px #c8a96e77;}
+.slabel{position:absolute;bottom:0;left:0;right:0;background:rgba(0,0,0,.72);font-size:7px;text-align:center;padding:2px;color:#fff;}
+.swatch-t{width:44px;height:44px;border-radius:50%;cursor:pointer;border:2px solid transparent;transition:all .2s;overflow:hidden;}
+.swatch-t img{width:100%;height:100%;object-fit:cover;}
+.swatch-t:hover,.swatch-t.activo{border-color:#c8a96e;box-shadow:0 0 6px #c8a96e77;}
+.btns-luz{display:flex;flex-wrap:wrap;gap:5px;}
+.btn-luz{padding:5px 9px;border-radius:20px;border:2px solid #444;background:#2a2a2a;color:#ccc;font-size:10px;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:4px;}
+.btn-luz:hover,.btn-luz.activo{border-color:#c8a96e;background:#2d2618;color:#fff;}
+.dot{width:9px;height:9px;border-radius:50%;flex-shrink:0;}
+#cv{flex:1;position:relative;}
+canvas{display:block;}
+#loading{position:absolute;inset:0;background:#1a1a1a;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;font-size:13px;color:#777;}
+.spin{width:36px;height:36px;border:3px solid #333;border-top-color:#c8a96e;border-radius:50%;animation:sp .8s linear infinite;}
+@keyframes sp{to{transform:rotate(360deg);}}
+</style>
+</head>
+<body>
+
+<div id="panel">
+  <h1>MESA <span>CONFIG</span></h1>
+  <div>
+    <div class="sec-titulo">Modelo</div>
+    <div class="btns-row">
+      <button class="btn-modelo activo" data-modelo="Midgard">Midgard</button>
+      <button class="btn-modelo" data-modelo="Asgard">Asgard</button>
+    </div>
+  </div>
+  <div>
+    <div class="sec-titulo">Madera</div>
+    <div class="swatches" id="sw-madera"></div>
+  </div>
+  <div>
+    <div class="sec-titulo">Tapiz</div>
+    <div class="swatches" id="sw-tapiz"></div>
+  </div>
+  <div>
+    <div class="sec-titulo">Iluminación LED</div>
+    <div class="btns-luz" id="btns-luz"></div>
+  </div>
+</div>
+
+<div id="cv">
+  <div id="loading"><div class="spin"></div><span>Cargando modelo...</span></div>
+</div>
+
+<script>
+const MADERA = {
+  roble:  {label:'Roble',  ruta:'textures/madera/roble.jpg',  repeat:[2,2],     rot:0},
+  nogal:  {label:'Nogal',  ruta:'textures/madera/nogal.jpg',  repeat:[2,2],     rot:0},
+  wengue: {label:'Wengüe', ruta:'textures/madera/wengue.jpg', repeat:[1.5,1.5], rot:0},
+  pino:   {label:'Pino',   ruta:'textures/madera/pino.jpg',   repeat:[3,3],     rot:0},
+  cerezo: {label:'Cerezo', ruta:'textures/madera/cerezo.jpg', repeat:[2,2],     rot:0},
+  maple:  {label:'Maple',  ruta:'textures/madera/maple.jpg',  repeat:[2.5,2.5], rot:0},
+};
+const TAPIZ = {
+  azul_marino:  {label:'Azul Marino',  ruta:'textures/tapiz/azul_marino.jpg'},
+  verde_billar: {label:'Verde Billar', ruta:'textures/tapiz/verde_billar.jpg'},
+  bordo:        {label:'Bordo',        ruta:'textures/tapiz/bordo.jpg'},
+  negro:        {label:'Negro',        ruta:'textures/tapiz/negro.jpg'},
+  gris:         {label:'Gris',         ruta:'textures/tapiz/gris.jpg'},
+  cafe:         {label:'Café',         ruta:'textures/tapiz/cafe.jpg'},
+};
+const LUZ = [
+  {id:'apagada', label:'Apagada', color:null,      int:0,   dot:'#555'},
+  {id:'k2700',   label:'2700K',   color:'#ffaa44', int:2.5, dot:'#ffaa44'},
+  {id:'k4000',   label:'4000K',   color:'#fff0cc', int:2.5, dot:'#fff0cc'},
+  {id:'k5500',   label:'5500K',   color:'#ddeeff', int:3.0, dot:'#ddeeff'},
+  {id:'azul',    label:'Azul',    color:'#0044ff', int:3.0, dot:'#0044ff'},
+  {id:'verde',   label:'Verde',   color:'#00ff66', int:3.0, dot:'#00ff66'},
+  {id:'morado',  label:'Morado',  color:'#8800ff', int:3.0, dot:'#8800ff'},
+  {id:'rojo',    label:'Rojo',    color:'#ff2200', int:3.0, dot:'#ff2200'},
+];
+</script>
+
+<script type="importmap">
+{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.165.0/examples/jsm/"}}
+</script>
+
+<script type="module">
+import * as THREE from 'three';
+import { GLTFLoader }    from 'three/addons/loaders/GLTFLoader.js';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+const container = document.getElementById('cv');
+const scene     = new THREE.Scene();
+scene.background = new THREE.Color(0x1a1a1a);
+
+const camera = new THREE.PerspectiveCamera(42, 1, 0.01, 100);
+camera.position.set(1.8, 1.2, 2.5);
+
+const renderer = new THREE.WebGLRenderer({antialias:true});
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+renderer.shadowMap.enabled = true;
+container.appendChild(renderer.domElement);
+
+const controls = new OrbitControls(camera, renderer.domElement);
+controls.enableDamping  = true;
+controls.dampingFactor  = 0.06;
+controls.minDistance    = 0.5;
+controls.maxDistance    = 6;
+controls.maxPolarAngle  = Math.PI / 1.85;
+controls.target.set(0, 0.3, 0);
+
+// Iluminación
+scene.add(new THREE.AmbientLight(0xffffff, 0.7));
+const dl = new THREE.DirectionalLight(0xffffff, 1.4);
+dl.position.set(3,5,3); dl.castShadow = true;
+scene.add(dl);
+const fl = new THREE.DirectionalLight(0xffffff, 0.4);
+fl.position.set(-3,2,-2);
+scene.add(fl);
+
+// Piso
+const piso = new THREE.Mesh(
+  new THREE.PlaneGeometry(10,10),
+  new THREE.MeshStandardMaterial({color:0x111111, roughness:0.9})
+);
+piso.rotation.x = -Math.PI/2;
+piso.receiveShadow = true;
+scene.add(piso);
+
+// Resize
+function resize() {
+  const w = container.clientWidth, h = container.clientHeight;
+  camera.aspect = w/h;
+  camera.updateProjectionMatrix();
+  renderer.setSize(w, h);
+}
+resize();
+window.addEventListener('resize', resize);
+
+// Loop
+(function animate() {
+  requestAnimationFrame(animate);
+  controls.update();
+  renderer.render(scene, camera);
+})();
+
+// ── Estado ────────────────────────────────────────────────
+let matMadera=null, matTapiz=null, matLuz=null, modeloObj=null;
+const sel = {modelo:'Midgard', madera:'roble', tapiz:'azul_marino', luz:'apagada'};
+const texLoader  = new THREE.TextureLoader();
+const gltfLoader = new GLTFLoader();
+
+// ── Cargar modelo ─────────────────────────────────────────
+function cargarModelo(nombre) {
+  document.getElementById('loading').style.display = 'flex';
+  if (modeloObj) { scene.remove(modeloObj); modeloObj = null; }
+
+  gltfLoader.load(`models/${nombre}.glb`, (gltf) => {
+    modeloObj = gltf.scene;
+
+    // Centrar
+    const box = new THREE.Box3().setFromObject(modeloObj);
+    const c   = box.getCenter(new THREE.Vector3());
+    modeloObj.position.sub(c);
+    modeloObj.position.y += (box.max.y - box.min.y) / 2;
+
+    // Capturar materiales
+    matMadera=null; matTapiz=null; matLuz=null;
+    modeloObj.traverse(n => {
+      if (!n.isMesh) return;
+      n.castShadow = n.receiveShadow = true;
+      const nm = n.material.name.toLowerCase();
+      if (nm === 'madera') matMadera = n.material;
+      if (nm === 'tapiz')  matTapiz  = n.material;
+      if (nm === 'luz')    matLuz    = n.material;
+    });
+
+    scene.add(modeloObj);
+    aplicarMadera(sel.madera);
+    aplicarTapiz(sel.tapiz);
+    aplicarLuz(sel.luz);
+    document.getElementById('loading').style.display = 'none';
+  }, undefined, err => {
+    document.getElementById('loading').innerHTML =
+      '<span style="color:#e55">⚠ Usa un servidor local (Live Server / http-server)</span>';
+  });
+}
+
+function mkTex(ruta, rx, ry, rot) {
+  const tex = texLoader.load(ruta);
+  tex.colorSpace = THREE.SRGBColorSpace;
+  tex.wrapS = tex.wrapT = THREE.RepeatWrapping;
+  tex.repeat.set(rx, ry);
+  tex.rotation = rot || 0;
+  return tex;
+}
+
+function aplicarMadera(k) {
+  sel.madera = k;
+  if (!matMadera) return;
+  const c = MADERA[k];
+  matMadera.map = mkTex(c.ruta, c.repeat[0], c.repeat[1], c.rot);
+  matMadera.roughness = 0.75; matMadera.metalness = 0;
+  matMadera.needsUpdate = true;
+}
+function aplicarTapiz(k) {
+  sel.tapiz = k;
+  if (!matTapiz) return;
+  matTapiz.map = mkTex(TAPIZ[k].ruta, 1, 1, 0);
+  matTapiz.roughness = 0.95; matTapiz.metalness = 0;
+  matTapiz.needsUpdate = true;
+}
+function aplicarLuz(id) {
+  sel.luz = id;
+  if (!matLuz) return;
+  const cfg = LUZ.find(l=>l.id===id);
+  if (!cfg || !cfg.color) {
+    matLuz.emissive.set(0x000000);
+    matLuz.emissiveIntensity = 0;
+  } else {
+    matLuz.emissive.set(cfg.color);
+    matLuz.emissiveIntensity = cfg.int;
+  }
+  matLuz.needsUpdate = true;
+}
+
+// ── UI ────────────────────────────────────────────────────
+document.querySelectorAll('[data-modelo]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('[data-modelo]').forEach(b=>b.classList.remove('activo'));
+    btn.classList.add('activo');
+    cargarModelo(btn.dataset.modelo);
+  });
+});
+
+const swM = document.getElementById('sw-madera');
+Object.entries(MADERA).forEach(([k,cfg],i) => {
+  const d = document.createElement('div');
+  d.className = 'swatch'+(i===0?' activo':'');
+  d.innerHTML = `<img src="${cfg.ruta}"><div class="slabel">${cfg.label}</div>`;
+  d.onclick = () => {
+    document.querySelectorAll('#sw-madera .swatch').forEach(s=>s.classList.remove('activo'));
+    d.classList.add('activo'); aplicarMadera(k);
+  };
+  swM.appendChild(d);
+});
+
+const swT = document.getElementById('sw-tapiz');
+Object.entries(TAPIZ).forEach(([k,cfg],i) => {
+  const d = document.createElement('div');
+  d.className = 'swatch-t'+(i===0?' activo':'');
+  d.title = cfg.label;
+  d.innerHTML = `<img src="${cfg.ruta}">`;
+  d.onclick = () => {
+    document.querySelectorAll('#sw-tapiz .swatch-t').forEach(s=>s.classList.remove('activo'));
+    d.classList.add('activo'); aplicarTapiz(k);
+  };
+  swT.appendChild(d);
+});
+
+const bluz = document.getElementById('btns-luz');
+LUZ.forEach(cfg => {
+  const b = document.createElement('button');
+  b.className = 'btn-luz'+(cfg.id==='apagada'?' activo':'');
+  b.innerHTML = `<span class="dot" style="background:${cfg.dot}"></span>${cfg.label}`;
+  b.onclick = () => {
+    document.querySelectorAll('.btn-luz').forEach(x=>x.classList.remove('activo'));
+    b.classList.add('activo'); aplicarLuz(cfg.id);
+  };
+  bluz.appendChild(b);
+});
+
+cargarModelo('Midgard');
+</script>
+</body>
+</html>

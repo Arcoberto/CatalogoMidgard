@@ -1,0 +1,312 @@
+const fs = require('fs');
+const diffText = \
+-function RealModelTable() {
+-  const { model, sizeType, customLength, customWidth, finish, matColor, woodTexture, isCovered, accessories, structureStyle } = useConfiguratorStore();
+-  
+-  const ledMaterials = useRef<THREE.MeshStandardMaterial[]>([]);
+-
+-  // Load the GLTF model dynamically
+-  const modelPath = model === 'Asgard' ? '/models/Asgard.glb' : '/models/Midgard.glb';
+-  const { scene } = useGLTF(modelPath);
+-
+-  const woodTex = useTexture({
+-    Roble: '/textures/roble.jpg',
+-    Pino: '/textures/pino.jpg',
+-    Chocolate: '/textures/chocolate.jpg',
+-    Nogal: '/textures/nogal.jpg',
+-    Encino: '/textures/encino.jpg',
+-  }) as any;
+-
+-  // Load Felt Textures
+-  const feltTex = useTexture({
+-    'Rojo': '/textures/rojo-tela.jpg',
+-    'Tinto': '/textures/tinto-tela.jpg',
+-    'Naranja': '/textures/naranja-tela.jpg',
+-    'Amarillo': '/textures/amarillo-tela.jpg',
+-    'Verde': '/textures/verde-tela.jpg',
+-    'Verde Esmeralda': '/textures/verdeesmeralda-tela.jpg',
+-    'Cyan': '/textures/cyan-tela.jpg',
+-    'Azul': '/textures/azulclaro-tela.jpg',
+-    'Azul Indigo': '/textures/azul.jpg',
+-    'Azul Metalico': '/textures/azulmetalico-tela.jpg',
+-    'Morado': '/textures/morado-tela.jpg',
+-    'Magenta': '/textures/magenta-tela.jpg',
+-    'Rosa': '/textures/rosa-tela.jpg',
+-    'Arena': '/textures/arena-tela.jpg',
+-    'Gris': '/textures/gris-tela.jpg',
+-    'Negro': '/textures/negro-tela.jpg',
+-  }) as any;
+-
+-  // Make textures seamless (tileable)
+-  useEffect(() => {
+-    const setupTex = (t: any) => {
+-      t.wrapS = THREE.RepeatWrapping;
+-      t.wrapT = THREE.RepeatWrapping;
+-      t.colorSpace = THREE.SRGBColorSpace;
+-    };
+-    Object.values(woodTex).forEach(setupTex);
+-    Object.values(feltTex).forEach(setupTex);
+-  }, [woodTex, feltTex]);
+-
+-  const activeWood = woodTex[woodTexture] || woodTex['Pino'];
+-  const activeFelt = feltTex[matColor] || feltTex['Azul'];
+-  const finishRoughness = finish === 'Mate' ? 0.9 : finish === 'Semi-Mate' ? 0.6 : 0.2;
+-
+-  const prevConfig = useRef({ wood: '', felt: '', finish: '', scene: null as any, structureStyle: '' });
+-
+-  // Efecto 1: Aplicar materiales y texturas (Operación pesada)
+-  useEffect(() => {
+-    if (!scene) return;
+-
+-    // Guardia absoluta: usar STRINGS primitivos, no objetos de ThreeJS, para evitar re-cálculos falsos
+-    if (
+-      prevConfig.current.wood === woodTexture &&
+-      prevConfig.current.felt === matColor &&
+-      prevConfig.current.finish === finish &&
+-      prevConfig.current.structureStyle === structureStyle &&
+-      prevConfig.current.scene === scene
+-    ) {
+-      return;
+-    }
+-
+-    prevConfig.current = { wood: woodTexture, felt: matColor, finish: finish, structureStyle, scene };
+-
+-    scene.traverse((child) => {
+-        if ((child as THREE.Mesh).isMesh) {
+-          const mesh = child as THREE.Mesh;
+-
+-          // Arreglar sombras corruptas/normales invertidas de SketchUp
+-          if (mesh.geometry && !mesh.userData.normalsFixed) {
+-            mesh.geometry.computeVertexNormals();
+-            mesh.userData.normalsFixed = true;
+-          }
+-
+-          let isTapa = false;
+-          let isStoredTapa = false;
+-          let currentCheck: THREE.Object3D | null = mesh;
+-          while (currentCheck) {
+-            const name = currentCheck.name.toLowerCase();
+-            if (name.includes('tapa') || name.includes('cubierta') || name.includes('superficie_mesa')) isTapa = true;
+-            if (name.includes('cajon') || name.includes('puestas') || name.includes('guardada')) isStoredTapa = true;
+-            currentCheck = currentCheck.parent;
+-          }
+-
+-          const mat = mesh.material as THREE.MeshStandardMaterial;
+-
+-          if (mat) {
+-            const matName = mat.name.toLowerCase();
+-            const meshName = mesh.name.toLowerCase();
+-
+-            // Helper para aplicar textura respetando UVs de SketchUp sin recompilar shaders
+-            const applyTexture = (material: THREE.MeshStandardMaterial, newTexture: THREE.Texture, scaleOverride?: number) => {
+-              let needsCompile = false;
+-              if (material.map) {
+-                const clonedTex = newTexture.clone();
+-                
+-                if (isTapa && !isStoredTapa) {
+-                  applyGlobalPlanarUVs(mesh, clonedTex, scaleOverride || 1.0);
+-                } else {
+-                  applySmartUVs(mesh, clonedTex); 
+-                  clonedTex.offset.copy(material.map.offset);
+-                  if (scaleOverride) clonedTex.repeat.multiplyScalar(scaleOverride);
+-                }
+-                
+-                material.map = clonedTex;
+-              } else {
+-                material.map = newTexture;
+-                needsCompile = true; // Solo recompilar si antes no había mapa
+-              }
+-              material.color.set('#ffffff'); // Reset base color
+-              material.metalness = 0; 
+-              if (needsCompile) material.needsUpdate = true;
+-            };
+-
+-            // Helper para pintar color sólido (para acabado bicolor)
+-            const applySolidColor = (material: THREE.MeshStandardMaterial, colorHex: string) => {
+-              material.map = null;
+-              material.color.set(colorHex);
+-              material.roughness = 0.6; // Pintura ligeramente lisa
+-              material.metalness = 0;
+-              material.needsUpdate = true;
+-            };
+-
+-            // Malla: Madera General
+-            if (matName.includes('madera') || meshName.includes('mesh_madera')) {
+-              // Ver si es estructura (patas o chambrana)
+-              let isStructure = false;
+-              let current: THREE.Object3D | null = mesh;
+-              while (current) {
+-                const name = current.name.toLowerCase();
+-                if (name.includes('pata') || name.includes('chambrana')) {
+-                  isStructure = true;
+-                  break;
+-                }
+-                current = current.parent;
+-              }
+-
+-              if (isStructure && (structureStyle === 'Bicolor Blanco' || structureStyle === 'Bicolor Negro')) {
+-                if (!mesh.userData.clonedStructureMat) {
+-                  mesh.userData.clonedStructureMat = mat.clone();
+-                }
+-                mesh.material = mesh.userData.clonedStructureMat;
+-                applySolidColor(mesh.material as THREE.MeshStandardMaterial, structureStyle === 'Bicolor Blanco' ? '#ffffff' : '#1a1a1a');
+-              } else {
+-                if (!mesh.userData.clonedWoodMat) {
+-                  mesh.userData.clonedWoodMat = mat.clone();
+-                }
+-                mesh.material = mesh.userData.clonedWoodMat;
+-                applyTexture(mesh.material as THREE.MeshStandardMaterial, activeWood);
+-                (mesh.material as THREE.MeshStandardMaterial).roughness = finishRoughness;
+-              }
+-            }
+-            
+-            // Malla: Tapete de Juego
+-            if (matName.includes('tapiz') || meshName.includes('mesh_tapete')) {
+-              if (!mesh.userData.clonedFeltMat) {
+-                mesh.userData.clonedFeltMat = mat.clone();
+-              }
+-              mesh.material = mesh.userData.clonedFeltMat;
+-              applyTexture(mesh.material as THREE.MeshStandardMaterial, activeFelt);
+-              (mesh.material as THREE.MeshStandardMaterial).roughness = 0.9;
+-            }
+-
+-            // Configuración inicial de Luz (Z-fighting)
+-            if (matName.includes('luz') || meshName.includes('mesh_led_difusor')) {
+-              if (!mat.polygonOffset) {
+-                mat.polygonOffset = true;
+-                mat.polygonOffsetFactor = -1;
+-                mat.polygonOffsetUnits = -1;
+-                mat.needsUpdate = true;
+-              }
+-            }
+-          }
+-        }
+-      });
+-  }, [scene, woodTexture, matColor, finish, structureStyle, activeWood, activeFelt, finishRoughness]);
+-
+-  // Efecto 2: Visibilidad rápida (LED, Portavasos)
+-  useEffect(() => {
+-    if (scene) {
+-      let cupholderIndex = 1;
+-      ledMaterials.current = [];
+-      scene.traverse((child) => {
+-        const nodeName = child.name.toLowerCase();
+-
+-        // Mallas: Portavasos (Grupos principales, sin importar su sufijo .glb_1, etc.)
+-        if (nodeName.startsWith('portavasos')) {
+-          child.visible = cupholderIndex <= accessories.cupholder;
+-          cupholderIndex++;
+-        }
+-
+-        if ((child as THREE.Mesh).isMesh) {
+-          const mesh = child as THREE.Mesh;
+-          const mat = mesh.material as THREE.MeshStandardMaterial;
+-
+-          if (mat) {
+-            const matName = mat.name.toLowerCase();
+-
+-            // Material: LED Difusor
+-            if (matName.includes('luz') || nodeName.includes('mesh_led_difusor')) {
+-              const isLedVisible = accessories.led;
+-              mesh.visible = isLedVisible;
+-              
+-              if (isLedVisible) {
+-                mat.emissiveIntensity = 3.5; 
+-                ledMaterials.current.push(mat as THREE.MeshStandardMaterial);
+-              }
+-            }
+-          }
+-        }
+-      });
+-    }
+-  }, [scene, accessories.led, accessories.cupholder]);
+-
+-  // Efecto 3: Mostrar/Ocultar cubiertas y Cajón
+-  useEffect(() => {
+-    if (!scene) return;
+-    const hasDrawer = accessories.drawer;
+-
+-    scene.traverse((child) => {
+-      const rawName = child.name ? child.name.toLowerCase() : '';
+-      const cleanName = rawName.replace(/[\s_]+/g, ''); // Remueve todos los espacios y guiones bajos
+-      
+-      // 1. Tapas principales de la mesa
+-      if (cleanName === 'cubierta' || cleanName.startsWith('cubierta') || cleanName === 'tapasprincipales' || cleanName.includes('superficie-midgard')) {
+-        const v = isCovered;
+-        child.visible = v;
+-        child.traverse((c) => { c.visible = v; });
+-      }
+-
+-      // 2. Cajón Base y Planta1 (Se muestran siempre que el cajón esté activo)
+-      else if (cleanName.includes('cajoncompleto') || cleanName === 'cajon' || cleanName.includes('planta1') || cleanName === 'cajonsuperficie') {
+-        const v = hasDrawer;
+-        child.visible = v;
+-        child.traverse((c) => { c.visible = v; });
+-      }
+-      // 3. Tapas puestas cajon (Se muestran si hay cajón y la mesa NO está cubierta)
+-      else if (cleanName.includes('tapaspuestascajon')) {
+-        const v = hasDrawer && !isCovered;
+-        child.visible = v;
+-        child.traverse((c) => { c.visible = v; });
+-      }
+-      // 4. Tapadera Cajon y Macetas 1 (Se muestran si hay cajón y la mesa SÍ está cubierta)
+-      else if (cleanName.includes('macetas1') || cleanName.includes('tapaderacajon') || cleanName.includes('geom3dtapaderacajon') || cleanName.includes('maceta')) {
+-        const v = hasDrawer && isCovered;
+-        child.visible = v;
+-        child.traverse((c) => { c.visible = v; });
+-      }
+-    });
+-  }, [scene, isCovered, accessories.drawer]);
+-
+-  // Animar LED RGB (solo si hay materiales LED activos y visibles)
+-  useFrame((state) => {
+-    if (ledMaterials.current.length > 0) {
+-      const time = state.clock.getElapsedTime();
+-      const TOTAL_CYCLE = 15; // 5s blanco + 10s colores
+-      const cycleTime = time % TOTAL_CYCLE;
+-      
+-      const color = new THREE.Color();
+-      
+-      if (cycleTime < 5) {
+-        color.set('#ffffff'); // Blanco puro
+-      } else {
+-        // Barrido RGB durante los 10 segundos restantes
+-        const hue = (cycleTime - 5) / 10; 
+-        color.setHSL(hue, 1, 0.6);
+-      }
+-      
+-      ledMaterials.current.forEach(mat => {
+-        mat.emissive.copy(color);
+-        mat.color.copy(color);
+-      });
+-    }
+-  });
+-
+-  // Escalado dinámico si el usuario elige tamaño personalizado
+-  let scaleX = 1;
+-  let scaleZ = 1;
+-  if (sizeType === 'custom') {
+-    // Standard Asgard is 170x110
+-    scaleX = customLength / 170;
+-    scaleZ = customWidth / 110;
+-  }
+-
+-  return (
+-    <group>
+-      <group scale={[scaleX, 1, scaleZ]}>
+-        <primitive object={scene} />
+-        {model === 'Midgard' && <AsgardAccessoriesOverlay woodTex={woodTex} />}
+-      </group>
+-        {accessories.shelf && <ShelfModel woodTex={woodTex} />}
+-        {accessories.desk && <DeskModel woodTex={woodTex} />}
+-        {accessories.chairs > 0 && <ChairsGroup woodTex={woodTex} feltTex={feltTex} chairsCount={accessories.chairs} />}
+-      </group>
+-  );
+-}
+\
+const restored = diffText.split('\n').filter(l => l.startsWith('-')).map(l => l.substring(1)).join('\n');
+let content = fs.readFileSync('src/components/3d/TableViewer3D.tsx', 'utf8');
+content = content.replace('function RealModelTable() {', restored + '\n\nfunction RealModelTable() {');
+content = content.replace('function RealModelTable() {\r\n}', '');
+content = content.replace('function RealModelTable() {\n}', '');
+fs.writeFileSync('src/components/3d/TableViewer3D.tsx', content);

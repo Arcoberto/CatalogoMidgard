@@ -1,0 +1,36 @@
+@import "tailwindcss";
+
+@theme {
+  --color-midgard-navy: #3F51B5; /* Blue Indigo */
+  --color-midgard-steel: #344054;
+  --color-midgard-purple: #9b8a9c;
+  --color-midgard-light-gray: #f2f4f7;
+  --color-midgard-gray: #98a2b3;
+  --color-midgard-black: #0c111d;
+  
+  --font-sans: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+  --font-mono: var(--font-geist-mono);
+}
+
+:root {
+  --background: #fcfcfd;
+  --foreground: #101828;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0c111d;
+    --foreground: #fcfcfd;
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+}
+
+.logo-filter {
+  /* Convierte de blanco/negro a Blue Indigo #3F51B5 aproximado */
+  filter: brightness(0) saturate(100%) invert(29%) sepia(87%) saturate(1637%) hue-rotate(222deg) brightness(97%) contrast(93%);
+}

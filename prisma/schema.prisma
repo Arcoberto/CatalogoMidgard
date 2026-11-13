@@ -1,0 +1,36 @@
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model TableModel {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  basePrice   Float
+  description String
+  updatedAt   DateTime @updatedAt
+}
+
+model Accessory {
+  id          String   @id @default(cuid())
+  key         String   @unique
+  name        String
+  unitPrice   Float
+  packPrice   Float?
+  updatedAt   DateTime @updatedAt
+}
+
+model Coupon {
+  id             String   @id @default(cuid())
+  code           String   @unique
+  discountType   String   // "percentage" | "fixed"
+  discountValue  Float
+  target         String   // "general" | "table_only" | "desk_only" | "shelf_only"
+  isActive       Boolean  @default(true)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}
