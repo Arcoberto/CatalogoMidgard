@@ -181,6 +181,15 @@ export default function MesasPage() {
               </div>
             </div>
           </div>
+
+          <div className="flex justify-center mt-12">
+            <Link
+              href="/faq#diferencia-modelos"
+              className="inline-flex items-center gap-2 bg-white text-midgard-navy border-2 border-midgard-navy px-8 py-3 rounded-full font-semibold hover:bg-midgard-navy hover:text-white transition-colors"
+            >
+              Diferencias entre modelos <ArrowRight className="w-5 h-5" />
+            </Link>
+          </div>
         </div>
       </section>
 

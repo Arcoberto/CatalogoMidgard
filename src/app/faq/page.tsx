@@ -1,11 +1,13 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ChevronDown, MessageCircle, ArrowRight } from "lucide-react";
 
 interface FaqItem {
   question: string;
+  /** Ancla para enlazar directo a la pregunta (ej. /faq#diferencia-modelos) */
+  anchor?: string;
   answer: React.ReactNode;
 }
 
@@ -22,6 +24,7 @@ const FAQ_DATA: FaqCategory[] = [
     items: [
       {
         question: "¿Cuál es la diferencia entre los modelos Asgard y Midgard?",
+        anchor: "diferencia-modelos",
         answer: (
           <div className="space-y-3">
             <div>
@@ -251,7 +254,8 @@ function AccordionItem({
 }) {
   return (
     <div
-      className={`border rounded-2xl overflow-hidden transition-all duration-300 ${
+      id={item.anchor}
+      className={`scroll-mt-48 border rounded-2xl overflow-hidden transition-all duration-300 ${
         isOpen
           ? "border-midgard-navy/30 shadow-md bg-white"
           : "border-midgard-light-gray bg-white hover:border-midgard-navy/20 hover:shadow-sm"
@@ -304,6 +308,20 @@ export default function FaqPage() {
   const toggle = (key: string) => {
     setOpenItems((prev) => ({ ...prev, [key]: !prev[key] }));
   };
+
+  // Si se llega con un ancla (ej. /faq#diferencia-modelos), abre esa pregunta y desplázate a ella
+  useEffect(() => {
+    const hash = window.location.hash.slice(1);
+    if (!hash) return;
+    FAQ_DATA.forEach((cat, c) =>
+      cat.items.forEach((item, i) => {
+        if (item.anchor === hash) {
+          setOpenItems((prev) => ({ ...prev, [`${c}-${i}`]: true }));
+          setTimeout(() => document.getElementById(hash)?.scrollIntoView({ behavior: "smooth", block: "start" }), 100);
+        }
+      })
+    );
+  }, []);
 
   const globalIndex = { count: 0 };
 
