@@ -32,6 +32,10 @@ const LEGEND: { id: ProductId; label: string }[] = [
   { id: 'escritorio', label: 'Escritorio' },
 ];
 
+const ARTICLE: Record<ProductId, string> = {
+  mesa: 'la', sillas: 'las', cajon: 'los', estante: 'el', escritorio: 'el',
+};
+
 export default function InteractiveRoom() {
   const [active, setActive] = useState<ProductId | null>(null);
   const router = useRouter();
@@ -82,21 +86,25 @@ export default function InteractiveRoom() {
         </span>
       </div>
 
-      {/* Leyenda (útil en celular, donde no hay mouse) */}
+      {/* Leyenda: solo resalta el producto en la imagen; para ir a la página hay que tocar la imagen */}
       <div className="flex flex-wrap justify-center gap-2 mt-4">
         {LEGEND.map((l) => (
           <button
             key={l.id}
             type="button"
-            onMouseEnter={() => setActive(l.id)}
-            onMouseLeave={() => setActive(null)}
-            onClick={() => router.push(HOTSPOTS.find((h) => h.id === l.id)!.href)}
+            onPointerEnter={(e) => { if (e.pointerType === 'mouse') setActive(l.id); }}
+            onPointerLeave={(e) => { if (e.pointerType === 'mouse') setActive(null); }}
+            onClick={() => setActive((prev) => (prev === l.id ? null : l.id))}
+            aria-pressed={active === l.id}
             className={`px-4 py-1.5 rounded-full text-sm font-medium border transition-colors ${active === l.id ? 'bg-midgard-navy text-white border-midgard-navy' : 'bg-white text-midgard-navy border-midgard-light-gray hover:border-midgard-navy'}`}
           >
             {l.label}
           </button>
         ))}
       </div>
+      <p className="text-center text-xs text-midgard-gray mt-2 md:hidden">
+        {active ? `Toca ${ARTICLE[active]} ${current?.toLowerCase()} en la imagen para ver más` : 'Elige un mueble y tócalo en la imagen para ver más'}
+      </p>
     </div>
   );
 }
