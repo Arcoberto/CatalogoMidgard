@@ -4,9 +4,8 @@ import { ArrowRight, CalendarDays, CheckCircle2, Lightbulb } from 'lucide-react'
 export const metadata = { title: 'Promociones | Midgard Mesas de Juego' };
 
 const DESCUENTOS: { pct: string; label: string; href: string; note?: string; alert?: string }[] = [
-  { pct: '30%', label: 'en nuestro nuevo Estante', href: '/estantes' },
-  { pct: '35%', label: 'en el Escritorio Elevable', href: '/escritorios' },
-  { pct: '30%', label: 'en Sillas', note: 'Hasta agotar existencias', alert: '¡Quedan pocas en stock!', href: '/sillas' },
+  { pct: '20%', label: 'en nuestro nuevo Estante', href: '/estantes' },
+  { pct: '27%', label: 'en el Escritorio Elevable', href: '/escritorios' },
 ];
 
 const PAQUETE_ASGARD = [
@@ -41,7 +40,7 @@ export default function PromocionesPage() {
 
       {/* Descuentos */}
       <section className="w-full bg-white py-20 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6">
           {DESCUENTOS.map((d) => (
             <Link key={d.label} href={d.href} className="group rounded-3xl border-2 border-red-100 bg-red-50/40 p-8 text-center hover:shadow-xl hover:-translate-y-1 transition-all">
               <p className="text-6xl font-extrabold text-red-600">{d.pct}</p>
