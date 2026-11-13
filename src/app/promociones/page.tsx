@@ -3,10 +3,10 @@ import { ArrowRight, CalendarDays, CheckCircle2, Lightbulb } from 'lucide-react'
 
 export const metadata = { title: 'Promociones | Midgard Mesas de Juego' };
 
-const DESCUENTOS = [
+const DESCUENTOS: { pct: string; label: string; href: string; note?: string; alert?: string }[] = [
   { pct: '30%', label: 'en nuestro nuevo Estante', href: '/estantes' },
   { pct: '35%', label: 'en el Escritorio Elevable', href: '/escritorios' },
-  { pct: '30%', label: 'en Sillas', note: 'Hasta agotar existencias', href: '/sillas' },
+  { pct: '30%', label: 'en Sillas', note: 'Hasta agotar existencias', alert: '¡Quedan pocas en stock!', href: '/sillas' },
 ];
 
 const PAQUETE_ASGARD = [
@@ -48,6 +48,12 @@ export default function PromocionesPage() {
               <p className="text-sm font-bold uppercase tracking-wider text-red-600 mb-2">de descuento</p>
               <p className="text-lg font-semibold text-midgard-navy">{d.label}</p>
               {d.note && <p className="text-xs text-midgard-gray mt-1">({d.note})</p>}
+              {d.alert && (
+                <span className="inline-flex items-center gap-2 mt-3 bg-red-600 text-white text-xs font-bold uppercase tracking-wide px-3 py-1 rounded-full shadow-sm">
+                  <span className="w-2 h-2 rounded-full bg-white animate-pulse" aria-hidden="true" />
+                  {d.alert}
+                </span>
+              )}
               <span className="inline-flex items-center gap-1 text-sm text-midgard-steel mt-4 group-hover:underline">Ver producto <ArrowRight className="w-4 h-4" /></span>
             </Link>
           ))}
