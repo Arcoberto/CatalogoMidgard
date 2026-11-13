@@ -33,7 +33,6 @@ export function Footer() {
             <ul className="space-y-3">
               <li><Link href="#faq" className="text-midgard-gray hover:text-white transition-colors text-sm">Preguntas Frecuentes</Link></li>
               <li><Link href="#envios" className="text-midgard-gray hover:text-white transition-colors text-sm">Información de Envíos</Link></li>
-              <li><Link href="#garantia" className="text-midgard-gray hover:text-white transition-colors text-sm">Garantía</Link></li>
             </ul>
           </div>
 
