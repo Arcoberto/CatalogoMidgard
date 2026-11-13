@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { Save, Loader2, ArrowLeft, Trash2, Plus } from "lucide-react";
 import Link from "next/link";
+import PhrasesManager from "@/components/admin/PhrasesManager";
 
 export default function AdminPage() {
   const [data, setData] = useState<any>(null);
@@ -249,6 +250,8 @@ export default function AdminPage() {
               )}
             </div>
           </section>
+
+          <PhrasesManager />
 
         </div>
       </div>

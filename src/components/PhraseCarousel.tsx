@@ -2,7 +2,8 @@
 
 import { useEffect, useState } from 'react';
 
-const PHRASES = [
+// Frases de respaldo (si la base de datos no responde o está vacía)
+const DEFAULT_PHRASES = [
   'El savegame de los juegos de mesa',
   'Déjalo armado. La mesa no juzga… y aguanta.',
   'Este entreturno ya mereció su propio DLC. Pónganle tapa y vamos por tacos.',
@@ -35,9 +36,9 @@ function split(phrase: string) {
   return [words.slice(0, mid).join(' '), words.slice(mid).join(' ')];
 }
 
-function shuffledOrder() {
+function shuffledOrder(count: number) {
   // La frase 1 siempre abre; el resto en orden aleatorio
-  const rest = PHRASES.slice(1).map((_, i) => i + 1);
+  const rest = Array.from({ length: Math.max(count - 1, 0) }, (_, i) => i + 1);
   for (let i = rest.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     [rest[i], rest[j]] = [rest[j], rest[i]];
@@ -46,12 +47,25 @@ function shuffledOrder() {
 }
 
 export default function PhraseCarousel() {
-  const [order, setOrder] = useState<number[]>(() => PHRASES.map((_, i) => i));
+  const [phrases, setPhrases] = useState<string[]>(DEFAULT_PHRASES);
+  const [order, setOrder] = useState<number[]>(() => DEFAULT_PHRASES.map((_, i) => i));
   const [pos, setPos] = useState(0);
   const [visible, setVisible] = useState(true);
 
   useEffect(() => {
-    setOrder(shuffledOrder());
+    setOrder(shuffledOrder(DEFAULT_PHRASES.length));
+    // Frases editables desde el panel de administración
+    fetch('/api/phrases')
+      .then((r) => (r.ok ? r.json() : []))
+      .then((data) => {
+        const list = Array.isArray(data) ? data.map((p: { text: string }) => p.text).filter(Boolean) : [];
+        if (list.length > 0) {
+          setPhrases(list);
+          setOrder(shuffledOrder(list.length));
+          setPos(0);
+        }
+      })
+      .catch(() => {});
   }, []);
 
   useEffect(() => {
@@ -61,7 +75,7 @@ export default function PhraseCarousel() {
         setPos((p) => {
           const next = p + 1;
           if (next >= order.length) {
-            setOrder(shuffledOrder());
+            setOrder(shuffledOrder(phrases.length));
             return 0;
           }
           return next;
@@ -70,9 +84,9 @@ export default function PhraseCarousel() {
       }, FADE_MS);
     }, INTERVAL_MS);
     return () => clearInterval(id);
-  }, [order.length]);
+  }, [order.length, phrases.length]);
 
-  const [first, second] = split(PHRASES[order[pos]]);
+  const [first, second] = split(phrases[order[pos]] ?? phrases[0] ?? '');
 
   return (
     <div className="min-h-[9rem] md:min-h-[12rem] flex items-center justify-center max-w-5xl">

@@ -15,6 +15,10 @@ async function main() {
   for (const { id, updatedAt, createdAt, ...c } of data.coupons) {
     await prisma.coupon.upsert({ where: { code: c.code }, update: c, create: c });
   }
+  // Frases: solo se cargan si la tabla está vacía (para no duplicar ni pisar cambios del admin)
+  if (data.phrases && (await prisma.phrase.count()) === 0) {
+    await prisma.phrase.createMany({ data: data.phrases.map((text, order) => ({ text, order })) });
+  }
   console.log('Seed completado');
 }
 
