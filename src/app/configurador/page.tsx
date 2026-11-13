@@ -148,7 +148,7 @@ function ConfiguradorContent() {
       {/* LEFT PANEL - CONTROLS */}
       <div className="order-2 lg:order-none relative z-0 lg:z-auto w-full lg:w-[450px] bg-white border-r border-midgard-light-gray flex flex-col lg:h-[calc(100vh-7rem)] lg:overflow-y-auto pb-24 lg:pb-0">
         <div className="pt-6 lg:pt-10 pb-4 lg:pb-6 px-6 border-b border-midgard-light-gray lg:sticky top-0 bg-white lg:z-50">
-          <h1 className="text-2xl font-bold text-midgard-navy">Configura tu Mesa</h1>
+          <h1 className="text-2xl font-bold text-midgard-navy">Configura tu Mueble</h1>
           <p className="text-sm text-midgard-gray">Personaliza cada detalle a tu gusto.</p>
         </div>
 
