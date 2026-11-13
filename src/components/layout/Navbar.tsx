@@ -41,12 +41,12 @@ export function Navbar() {
           </div>
 
           {/* Desktop Nav */}
-          <div className="hidden md:flex md:items-center md:space-x-8">
+          <div className="relative z-10 hidden md:flex md:items-center md:space-x-8">
             {NAV_LINKS.map((link) => (
               <Link
                 key={link.name}
                 href={link.href}
-                className="text-midgard-steel hover:text-midgard-navy transition-colors font-medium text-sm uppercase tracking-wide"
+                className="inline-block py-2 text-midgard-steel hover:text-midgard-navy transition-colors font-medium text-sm uppercase tracking-wide"
               >
                 {link.name}
               </Link>
@@ -62,7 +62,7 @@ export function Navbar() {
           </div>
 
           {/* Mobile menu button */}
-          <div className="flex items-center md:hidden">
+          <div className="relative z-10 flex items-center md:hidden">
             <button
               onClick={() => setIsOpen(!isOpen)}
               className="text-midgard-navy hover:text-midgard-steel focus:outline-none"
