@@ -2,6 +2,7 @@
 
 import { useConfiguratorStore, TableFinish, StructureStyle, TableFelt, getTableCategory, getMaxAccessories } from "@/store/useConfiguratorStore";
 import { Suspense, useEffect, useState } from "react";
+import { SHIPPING_RATES } from '@/lib/shipping';
 import { Check, ChevronRight, Info, Video, RefreshCw, Table as TableIcon, Library, Monitor, Gift, Heart } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import dynamic from 'next/dynamic';
@@ -762,21 +763,19 @@ function ConfiguradorContent() {
             <label className="block text-sm font-semibold text-midgard-navy mb-2">Calcula tu envío</label>
             <select 
               className="w-full p-2 border rounded-lg text-sm bg-white"
+              value={shippingState}
               onChange={(e) => {
                 const val = e.target.value;
-                let cost = 0;
-                if (val === 'CDMX') cost = 1500;
-                if (val === 'GDL') cost = 800;
-                if (val === 'MTY') cost = 1800;
-                if (val === 'OTRO') cost = 2300;
-                setShipping(val, cost);
+                const rate = SHIPPING_RATES.find((r) => r.state === val);
+                setShipping(val, rate ? rate.cost : 0);
               }}
             >
               <option value="">Selecciona tu estado...</option>
-              <option value="CDMX">Ciudad de México</option>
-              <option value="GDL">Jalisco (Zona GDL)</option>
-              <option value="MTY">Nuevo León (Zona MTY)</option>
-              <option value="OTRO">Otro Estado</option>
+              {SHIPPING_RATES.map((r) => (
+                <option key={r.state} value={r.state}>
+                  {r.cost === 0 ? `${r.state} – Envío gratis` : `${r.state} – $${r.cost.toLocaleString('en-US')}`}
+                </option>
+              ))}
             </select>
             <p className="text-xs text-midgard-gray mt-1">* El costo final será confirmado antes de fabricar.</p>
           </div>
@@ -833,10 +832,10 @@ function ConfiguradorContent() {
                   <span className="font-bold text-green-700">-${ (getSubtotal() - getTotalPrice()).toLocaleString('en-US') }</span>
                 </div>
               )}
-              {shippingCost > 0 && (
+              {shippingState && (
               <div className="flex justify-between text-sm mb-1 text-midgard-gray bg-gray-50 p-2 rounded-lg mt-2 border border-gray-100">
-                <span>Envío (Paquetería 3 Guerras)</span>
-                <span className="font-bold text-gray-700">${shippingCost.toLocaleString('en-US')}</span>
+                <span>{shippingCost === 0 ? 'Envío (Zona GDL)' : 'Envío (Paquetería 3 Guerras)'}</span>
+                <span className={`font-bold ${shippingCost === 0 ? 'text-green-700' : 'text-gray-700'}`}>{shippingCost === 0 ? 'Gratis' : `$${shippingCost.toLocaleString('en-US')}`}</span>
               </div>
             )}
             <div className="flex justify-between text-lg font-bold text-midgard-navy mt-4 border-t pt-2">
@@ -883,7 +882,7 @@ function ConfiguradorContent() {
               }
 
               msgParts.push(
-                `*Envío:*\n${shippingState ? `${shippingState} ($${shippingCost.toLocaleString('en-US')} por Paquetería 3 Guerras)` : 'Por definir'}\n\n` +
+                `*Envío:*\n${shippingState ? (shippingCost === 0 ? `${shippingState} (Envío gratis)` : `${shippingState} ($${shippingCost.toLocaleString('en-US')} por Paquetería 3 Guerras)`) : 'Por definir'}\n\n` +
                 `*Total Estimado:*\n$${(getTotalPrice() + shippingCost).toLocaleString('en-US')} MXN\n\n` +
                 `Muchas gracias.`
               );
