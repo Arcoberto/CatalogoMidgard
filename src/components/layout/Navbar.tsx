@@ -24,14 +24,21 @@ export function Navbar() {
     <nav className="fixed top-0 left-0 w-full z-50 bg-white/80 backdrop-blur-md border-b border-midgard-light-gray transition-all shadow-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-28">
-          {/* Logo */}
-          <Link href="/" className="flex-shrink-0 flex items-center justify-center gap-3 ml-4">
+          {/* Logo: la imagen tiene mucho margen transparente y está escalada,
+              así que solo la zona visible del logo es clicable */}
+          <div className="relative flex-shrink-0 flex items-center justify-center gap-3 ml-4">
             <img 
               src="/logo-indigo.png" 
-              alt="Midgard Mesas de Juego Logo" 
-              className="h-28 w-auto object-contain scale-[1.7] origin-left"
+              alt="" 
+              aria-hidden="true"
+              className="h-28 w-auto object-contain scale-[1.7] origin-left pointer-events-none"
             />
-          </Link>
+            <Link
+              href="/"
+              aria-label="Midgard Mesas de Juego - Inicio"
+              className="absolute left-[60%] top-[21%] w-[50%] h-[60%] rounded-lg"
+            />
+          </div>
 
           {/* Desktop Nav */}
           <div className="hidden md:flex md:items-center md:space-x-8">
