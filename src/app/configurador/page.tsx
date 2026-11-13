@@ -765,10 +765,10 @@ function ConfiguradorContent() {
               onChange={(e) => {
                 const val = e.target.value;
                 let cost = 0;
-                if (val === 'CDMX') cost = 1200;
-                if (val === 'GDL') cost = 500;
-                if (val === 'MTY') cost = 1500;
-                if (val === 'OTRO') cost = 2000;
+                if (val === 'CDMX') cost = 1500;
+                if (val === 'GDL') cost = 800;
+                if (val === 'MTY') cost = 1800;
+                if (val === 'OTRO') cost = 2300;
                 setShipping(val, cost);
               }}
             >
@@ -835,7 +835,7 @@ function ConfiguradorContent() {
               )}
               {shippingCost > 0 && (
               <div className="flex justify-between text-sm mb-1 text-midgard-gray bg-gray-50 p-2 rounded-lg mt-2 border border-gray-100">
-                <span>Envío (Transportes Castores)</span>
+                <span>Envío (Paquetería 3 Guerras)</span>
                 <span className="font-bold text-gray-700">${shippingCost.toLocaleString('en-US')}</span>
               </div>
             )}
@@ -883,7 +883,7 @@ function ConfiguradorContent() {
               }
 
               msgParts.push(
-                `*Envío:*\n${shippingState ? `${shippingState} ($${shippingCost.toLocaleString('en-US')} por Transportes Castores)` : 'Por definir'}\n\n` +
+                `*Envío:*\n${shippingState ? `${shippingState} ($${shippingCost.toLocaleString('en-US')} por Paquetería 3 Guerras)` : 'Por definir'}\n\n` +
                 `*Total Estimado:*\n$${(getTotalPrice() + shippingCost).toLocaleString('en-US')} MXN\n\n` +
                 `Muchas gracias.`
               );
