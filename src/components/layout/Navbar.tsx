@@ -4,6 +4,25 @@ import Link from 'next/link';
 import { Menu, X } from 'lucide-react';
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Caveat } from 'next/font/google';
+
+const handwritten = Caveat({ subsets: ['latin'], weight: ['700'] });
+
+// Promociones aparece tachado con "Buen Fin" escrito a mano encima
+function NavLabel({ name }: { name: string }) {
+  if (name !== 'Promociones') return <>{name}</>;
+  return (
+    <span className="relative inline-block">
+      <span className="line-through decoration-red-600 decoration-2">{name}</span>
+      <span
+        className={`${handwritten.className} absolute left-1/2 -top-4 -translate-x-1/2 -rotate-12 text-red-600 text-xl xl:text-2xl normal-case tracking-normal whitespace-nowrap pointer-events-none`}
+        aria-hidden="true"
+      >
+        Buen Fin
+      </span>
+    </span>
+  );
+}
 
 const NAV_LINKS = [
   { name: 'Inicio', href: '/' },
@@ -48,7 +67,7 @@ export function Navbar() {
                 href={link.href}
                 className="inline-block py-2 text-midgard-steel hover:text-midgard-navy transition-colors font-medium text-xs xl:text-sm uppercase tracking-wide whitespace-nowrap"
               >
-                {link.name}
+                <NavLabel name={link.name} />
               </Link>
             ))}
             <a
@@ -90,7 +109,7 @@ export function Navbar() {
                   onClick={() => setIsOpen(false)}
                   className="block px-3 py-3 text-base font-medium text-midgard-steel hover:text-midgard-navy uppercase tracking-wide"
                 >
-                  {link.name}
+                  <NavLabel name={link.name} />
                 </Link>
               ))}
               <a
