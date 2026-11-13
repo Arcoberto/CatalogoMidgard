@@ -97,7 +97,8 @@ export default function MesasPage() {
                   <div className="text-right">
                     <p className="text-sm text-midgard-gray line-through">$21,300 MXN</p>
                     <p className="text-2xl font-bold text-red-600">$19,170 <span className="text-sm font-normal">MXN</span></p>
-                    <p className="text-xs font-bold uppercase tracking-wide text-red-600">o 3 MSI · Buen Fin</p>
+                    <p className="text-xs font-bold uppercase tracking-wide text-red-600">Buen Fin</p>
+                    <p className="text-xs font-semibold text-red-600 max-w-[14rem] ml-auto">Pago a meses: Hasta 3 MSI o hasta 12 meses con interés fijo</p>
                   </div>
                 </div>
                 <p className="text-midgard-gray mb-6 h-12">
