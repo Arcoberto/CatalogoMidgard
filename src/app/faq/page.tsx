@@ -343,7 +343,7 @@ export default function FaqPage() {
       </section>
 
       {/* Category Nav Pills */}
-      <div className="sticky top-20 z-30 bg-white/90 backdrop-blur-md border-b border-midgard-light-gray shadow-sm">
+      <div className="sticky top-28 z-30 bg-white/90 backdrop-blur-md border-b border-midgard-light-gray shadow-sm">
         <div className="max-w-4xl mx-auto px-4 py-3 flex gap-2 overflow-x-auto scrollbar-hide">
           {FAQ_DATA.map((cat, i) => (
             <a
