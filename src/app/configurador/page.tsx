@@ -117,6 +117,20 @@ function ConfiguradorContent() {
   const isAsgard = model === 'Asgard';
   const [showSummary, setShowSummary] = useState(false); // solo móvil
 
+  // Evita el "deslizar para recargar" del navegador móvil mientras se usa el configurador
+  useEffect(() => {
+    const html = document.documentElement;
+    const body = document.body;
+    const prevHtml = html.style.overscrollBehaviorY;
+    const prevBody = body.style.overscrollBehaviorY;
+    html.style.overscrollBehaviorY = 'none';
+    body.style.overscrollBehaviorY = 'none';
+    return () => {
+      html.style.overscrollBehaviorY = prevHtml;
+      body.style.overscrollBehaviorY = prevBody;
+    };
+  }, []);
+
   const acabados: TableFinish[] = ['Mate', 'Semi-Mate', 'Brillante'];
   const estructuras: StructureStyle[] = ['Un sólo tono', 'Bicolor Blanco', 'Bicolor Negro'];
 
@@ -613,7 +627,7 @@ function ConfiguradorContent() {
       </div>
 
       {/* RIGHT PANEL - 3D CANVAS & SUMMARY */}
-      <div className="order-1 lg:order-none flex-1 relative bg-gradient-to-br from-gray-100 to-gray-200 h-[58vh] min-h-[360px] lg:min-h-0 lg:h-auto">
+      <div className="order-1 lg:order-none flex-1 relative bg-gradient-to-br from-gray-100 to-gray-200 h-[42vh] min-h-[280px] sticky top-28 z-30 lg:static lg:z-auto lg:min-h-0 lg:h-auto shadow-md lg:shadow-none">
         
         {/* 3D Canvas */}
         <div className="absolute inset-0 z-0">
