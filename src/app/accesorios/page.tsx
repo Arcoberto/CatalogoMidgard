@@ -7,41 +7,13 @@ export const metadata = { title: 'Accesorios | Midgard Mesas de Juego' };
 export default function AccesoriosPage() {
   return (
     <div className="flex flex-col items-center">
-      {/* Hero */}
-      <section className="w-full bg-midgard-light-gray flex justify-center py-20 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-7xl w-full grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-          <div className="flex flex-col items-start space-y-6">
-            <h1 className="text-5xl md:text-6xl font-bold text-midgard-navy leading-tight">ACCESORIOS</h1>
-            <p className="text-lg text-midgard-gray max-w-lg leading-relaxed">
-              Complementos para tu mesa de juego: cajón para superficies, portavasos y extensores de tablero.
-            </p>
-            <div className="flex flex-wrap gap-3 pt-2">
-              {[
-                { href: '#cajon', label: 'Cajón para superficies' },
-                { href: '#portavasos', label: 'Portavasos' },
-                { href: '#extensores', label: 'Extensores de tablero' },
-              ].map((l) => (
-                <Link key={l.href} href={l.href} className="bg-white text-midgard-navy border border-midgard-light-gray px-5 py-2.5 rounded-full text-sm font-semibold hover:border-midgard-navy transition-all">
-                  {l.label}
-                </Link>
-              ))}
-            </div>
-          </div>
-          <div className="relative h-[400px] md:h-[500px] w-full rounded-3xl overflow-hidden shadow-2xl select-none">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/images/accesorios/cajon-1.jpg" alt="Cajón para superficies de mesa" className="w-full h-full object-cover" draggable={false} />
-            <div className="absolute inset-0" aria-hidden="true" />
-          </div>
-        </div>
-      </section>
-
       {/* 1. Cajón para superficies */}
       <section id="cajon" className="w-full bg-white py-24 px-4 sm:px-6 lg:px-8 scroll-mt-28">
         <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
           <div className="rounded-3xl overflow-hidden shadow-lg border border-midgard-light-gray">
             <ProductGallery
               className="h-[28rem]"
-              photos={[2, 3, 4, 5].map((n) => ({
+              photos={[1, 2, 3, 4, 5].map((n) => ({
                 src: `/images/accesorios/cajon-${n}.jpg`,
                 alt: `Cajón para superficies - foto ${n}`,
               }))}
