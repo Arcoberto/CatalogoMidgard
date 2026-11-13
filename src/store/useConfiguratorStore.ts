@@ -123,6 +123,8 @@ interface ConfiguratorState {
   
   toggleProduct: (product: ProductType) => void;
   setCurrentMenu: (menu: ProductType | null) => void;
+  /** Deja activo solo el producto indicado (según desde dónde se entró al configurador) */
+  startWithProduct: (product: ProductType) => void;
   
   // Computed
   getSubtotal: () => number;
@@ -231,6 +233,10 @@ export const useConfiguratorStore = create<ConfiguratorState>((set, get) => ({
   }),
 
   setCurrentMenu: (menu) => set({ currentMenu: menu }),
+  startWithProduct: (product) => set({
+    activeProducts: { table: product === 'table', shelf: product === 'shelf', desk: product === 'desk' },
+    currentMenu: product,
+  }),
   resetConfigurator: () => set((state) => ({
     model: 'Asgard',
     sizeType: 'standard',

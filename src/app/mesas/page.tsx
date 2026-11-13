@@ -23,7 +23,7 @@ export default function MesasPage() {
               Mesas de comedor diseñadas para transformar tu espacio en una sala de juegos. Haz de cada partida una experiencia inolvidable. Artesanía, tecnología y diseño en tu sala.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 pt-4">
-              <Link href="/configurador" className="bg-midgard-navy text-white px-8 py-4 rounded-full font-semibold hover:bg-midgard-black transition-all flex items-center justify-center gap-2 shadow-lg hover:shadow-xl hover:-translate-y-1">
+              <Link href="/configurador?product=table" className="bg-midgard-navy text-white px-8 py-4 rounded-full font-semibold hover:bg-midgard-black transition-all flex items-center justify-center gap-2 shadow-lg hover:shadow-xl hover:-translate-y-1">
                 Configurar mi mesa
                 <ArrowRight className="w-5 h-5" />
               </Link>
@@ -193,7 +193,7 @@ export default function MesasPage() {
           <p className="text-midgard-gray text-lg mb-8">
             Todas nuestras mesas son fabricadas de forma artesanal. Puedes elegir acabados, colores de tapete Mystic y una amplia variedad de accesorios modulares.
           </p>
-          <Link href="/configurador" className="inline-block bg-white text-midgard-navy px-8 py-4 rounded-full font-bold hover:scale-105 transition-transform shadow-lg">
+          <Link href="/configurador?product=table" className="inline-block bg-white text-midgard-navy px-8 py-4 rounded-full font-bold hover:scale-105 transition-transform shadow-lg">
             Ir al Configurador 3D
           </Link>
         </div>

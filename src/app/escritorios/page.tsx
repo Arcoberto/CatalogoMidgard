@@ -28,7 +28,7 @@ export default function EscritoriosPage() {
               Escritorio elevable de diseño moderno para trabajar sentado o de pie.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 pt-2">
-              <Link href="/configurador" className="bg-midgard-navy text-white px-8 py-4 rounded-full font-semibold hover:bg-midgard-black transition-all flex items-center justify-center gap-2 shadow-lg hover:shadow-xl hover:-translate-y-1">
+              <Link href="/configurador?product=desk" className="bg-midgard-navy text-white px-8 py-4 rounded-full font-semibold hover:bg-midgard-black transition-all flex items-center justify-center gap-2 shadow-lg hover:shadow-xl hover:-translate-y-1">
                 Cotizar escritorio
                 <ArrowRight className="w-5 h-5" />
               </Link>
@@ -106,7 +106,7 @@ export default function EscritoriosPage() {
               La madera y el acabado son totalmente personalizables, para que el escritorio combine a la perfección con tu espacio y tus preferencias.
             </p>
 
-            <Link href="/configurador" className="block w-full py-3 px-4 bg-midgard-navy text-white text-center rounded-xl font-semibold hover:bg-midgard-black transition-colors">
+            <Link href="/configurador?product=desk" className="block w-full py-3 px-4 bg-midgard-navy text-white text-center rounded-xl font-semibold hover:bg-midgard-black transition-colors">
               Cotizar escritorio
             </Link>
           </div>

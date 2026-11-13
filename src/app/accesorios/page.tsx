@@ -59,7 +59,7 @@ export default function AccesoriosPage() {
               <p className="text-xs text-midgard-gray mt-2">Pueden ajustarse según el tamaño de la mesa.</p>
             </div>
 
-            <Link href="/configurador" className="flex items-center justify-center gap-2 w-full py-3 px-4 bg-midgard-navy text-white text-center rounded-xl font-semibold hover:bg-midgard-black transition-colors">
+            <Link href="/configurador?product=table" className="flex items-center justify-center gap-2 w-full py-3 px-4 bg-midgard-navy text-white text-center rounded-xl font-semibold hover:bg-midgard-black transition-colors">
               Cotizar cajón <ArrowRight className="w-4 h-4" />
             </Link>
           </div>
@@ -117,7 +117,7 @@ export default function AccesoriosPage() {
               </div>
             </div>
 
-            <Link href="/configurador" className="flex items-center justify-center gap-2 w-full py-3 px-4 bg-midgard-navy text-white text-center rounded-xl font-semibold hover:bg-midgard-black transition-colors">
+            <Link href="/configurador?product=table" className="flex items-center justify-center gap-2 w-full py-3 px-4 bg-midgard-navy text-white text-center rounded-xl font-semibold hover:bg-midgard-black transition-colors">
               Cotizar portavasos <ArrowRight className="w-4 h-4" />
             </Link>
           </div>
@@ -175,7 +175,7 @@ export default function AccesoriosPage() {
               </div>
             </div>
 
-            <Link href="/configurador" className="flex items-center justify-center gap-2 w-full py-3 px-4 bg-midgard-navy text-white text-center rounded-xl font-semibold hover:bg-midgard-black transition-colors">
+            <Link href="/configurador?product=table" className="flex items-center justify-center gap-2 w-full py-3 px-4 bg-midgard-navy text-white text-center rounded-xl font-semibold hover:bg-midgard-black transition-colors">
               Cotizar extensores <ArrowRight className="w-4 h-4" />
             </Link>
           </div>

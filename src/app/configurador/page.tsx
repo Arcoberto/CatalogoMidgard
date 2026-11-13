@@ -87,7 +87,7 @@ function ConfiguradorContent() {
     shippingState, shippingCost, setShipping,
     couponCode, couponDiscountType, couponDiscountValue, couponTarget, applyCoupon, removeCoupon,
     getSubtotal, getTotalPrice,
-    activeProducts, toggleProduct, currentMenu, setCurrentMenu,
+    activeProducts, toggleProduct, currentMenu, setCurrentMenu, startWithProduct,
     resetConfigurator
   } = useConfiguratorStore();
 
@@ -103,11 +103,18 @@ function ConfiguradorContent() {
   };
 
   useEffect(() => {
+    // Producto inicial según el botón desde el que se llegó (?product=shelf|desk|table)
+    const productParam = searchParams.get('product');
     const modelParam = searchParams.get('model');
+    if (productParam === 'table' || productParam === 'shelf' || productParam === 'desk') {
+      startWithProduct(productParam);
+    } else if (modelParam) {
+      startWithProduct('table');
+    }
     if (modelParam === 'Asgard' || modelParam === 'Midgard') {
       setModel(modelParam);
     }
-  }, [searchParams, setModel]);
+  }, [searchParams, setModel, startWithProduct]);
 
   useEffect(() => {
     if (model === 'Midgard' && matColor !== 'Negro' && matColor !== 'Gris') {

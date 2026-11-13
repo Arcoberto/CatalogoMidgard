@@ -31,7 +31,7 @@ export default function EstantesPage() {
               Diseño industrial y acabado minimalista que combina a la perfección con cualquier decoración moderna.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 pt-2">
-              <Link href="/configurador" className="bg-midgard-navy text-white px-8 py-4 rounded-full font-semibold hover:bg-midgard-black transition-all flex items-center justify-center gap-2 shadow-lg hover:shadow-xl hover:-translate-y-1">
+              <Link href="/configurador?product=shelf" className="bg-midgard-navy text-white px-8 py-4 rounded-full font-semibold hover:bg-midgard-black transition-all flex items-center justify-center gap-2 shadow-lg hover:shadow-xl hover:-translate-y-1">
                 Cotizar estante
                 <ArrowRight className="w-5 h-5" />
               </Link>
@@ -126,7 +126,7 @@ export default function EstantesPage() {
               Ideal para coleccionistas de juegos de mesa que buscan orden, estilo y durabilidad en un solo mueble.
             </p>
 
-            <Link href="/configurador" className="block w-full py-3 px-4 bg-midgard-navy text-white text-center rounded-xl font-semibold hover:bg-midgard-black transition-colors">
+            <Link href="/configurador?product=shelf" className="block w-full py-3 px-4 bg-midgard-navy text-white text-center rounded-xl font-semibold hover:bg-midgard-black transition-colors">
               Cotizar estante
             </Link>
           </div>
