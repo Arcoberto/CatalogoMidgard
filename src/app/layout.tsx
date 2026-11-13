@@ -11,8 +11,18 @@ const outfit = Outfit({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://catalogo-midgard.vercel.app"),
   title: "Midgard Mesas de Juego | El Savegame de los Juegos de Mesa",
   description: "Mesas premium diseñadas para transformar cada partida en una experiencia inolvidable. Configurador interactivo 3D.",
+  // Vista previa al compartir el enlace (WhatsApp, Facebook, Instagram...). La imagen es src/app/opengraph-image.jpg
+  openGraph: {
+    title: "Midgard Mesas de Juego",
+    description: "El savegame de los juegos de mesa. Mesas premium desde Guadalajara, con configurador 3D.",
+    siteName: "Midgard Mesas de Juego",
+    locale: "es_MX",
+    type: "website",
+  },
+  twitter: { card: "summary_large_image" },
 };
 
 export default function RootLayout({
