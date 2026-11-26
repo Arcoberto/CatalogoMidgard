@@ -44,8 +44,10 @@ export function Navbar() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-28">
           {/* Logo: la imagen tiene mucho margen transparente y está escalada,
-              así que solo la zona visible del logo es clicable */}
-          <div className="relative flex-shrink-0 flex items-center justify-center gap-3 ml-4 mr-8 xl:mr-12">
+              así que solo la zona visible del logo es clicable.
+              En móvil se centra en pantalla: el centro visible del logo está a ~133px
+              del borde izquierdo de la imagen (escalada 1.7x desde la izquierda) */}
+          <div className="absolute top-0 left-1/2 -translate-x-[133px] lg:relative lg:left-auto lg:translate-x-0 flex-shrink-0 flex items-center justify-center gap-3 lg:ml-4 lg:mr-8 xl:mr-12">
             <img 
               src="/logo-indigo.png" 
               alt="" 
@@ -81,7 +83,7 @@ export function Navbar() {
           </div>
 
           {/* Mobile menu button */}
-          <div className="relative z-10 flex items-center lg:hidden">
+          <div className="relative z-10 ml-auto flex items-center lg:hidden">
             <button
               onClick={() => setIsOpen(!isOpen)}
               className="text-midgard-navy hover:text-midgard-steel focus:outline-none"
