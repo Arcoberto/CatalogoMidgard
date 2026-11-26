@@ -18,9 +18,56 @@ const PAQUETE_ASGARD = [
   { t: 'Alfombra de uso rudo en la base', d: 'Mayor estabilidad y protección' },
 ];
 
+// Black Friday: visible solo del 26 al 29 de noviembre de 2026 (hora de Guadalajara/CDMX)
+const BLACK_FRIDAY_START = new Date('2026-11-26T00:00:00-06:00');
+const BLACK_FRIDAY_END = new Date('2026-11-30T00:00:00-06:00');
+
+const BLACK_FRIDAY_IMAGES = [
+  { src: '/images/promociones/black-friday-mesa-6.webp', alt: 'Promoción Black Friday: mesa 6 personas encino tono chocolate con paño verde esmeralda, de $21,300 a $17,300. Del 26 al 29 de noviembre.' },
+  { src: '/images/promociones/black-friday-mesa-8.jpg', alt: 'Promoción Black Friday: mesa 8 personas encino natural con paño tinto, de $23,900 a $19,500. Del 26 al 29 de noviembre.' },
+];
+
+// Se evalúa en cada visita para que la promoción aparezca y desaparezca sola según la fecha
+export const dynamic = 'force-dynamic';
+
 export default function PromocionesPage() {
+  const now = new Date();
+  const showBlackFriday = now >= BLACK_FRIDAY_START && now < BLACK_FRIDAY_END;
+
   return (
     <div className="flex flex-col items-center">
+      {/* Black Friday (temporal) */}
+      {showBlackFriday && (
+        <section className="w-full bg-midgard-black py-12 px-4 sm:px-6 lg:px-8">
+          <div className="max-w-6xl mx-auto">
+            <h2 className="text-3xl md:text-5xl font-bold text-white text-center mb-2 uppercase tracking-wide">Black Friday</h2>
+            <p className="text-center text-midgard-gray mb-8">Solo del 26 al 29 de noviembre</p>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {BLACK_FRIDAY_IMAGES.map((img) => (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  key={img.src}
+                  src={img.src}
+                  alt={img.alt}
+                  className="w-full h-auto rounded-2xl shadow-2xl select-none"
+                  draggable={false}
+                />
+              ))}
+            </div>
+            <div className="flex justify-center mt-8">
+              <a
+                href="https://wa.me/523314137429?text=%C2%A1Hola!%20Me%20interesa%20la%20promoci%C3%B3n%20de%20Black%20Friday"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 bg-[#25D366] text-white px-8 py-4 rounded-full font-bold hover:bg-[#128C7E] transition-colors shadow-lg"
+              >
+                Aprovechar por WhatsApp <ArrowRight className="w-5 h-5" />
+              </a>
+            </div>
+          </div>
+        </section>
+      )}
+
       {/* Hero */}
       <section className="w-full bg-midgard-light-gray flex justify-center py-16 px-4 sm:px-6 lg:px-8">
         <div className="max-w-4xl w-full flex flex-col items-center text-center gap-6">
