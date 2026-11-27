@@ -111,6 +111,15 @@ const FAQ_DATA: FaqCategory[] = [
         question: "¿Cuál es el proceso de compra?",
         answer: (
           <div className="text-midgard-gray space-y-2">
+            <a href="/images/faq/proceso-de-compra.jpg" target="_blank" rel="noopener noreferrer" className="block mb-4" title="Ver imagen completa">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/images/faq/proceso-de-compra.jpg"
+                alt="Tu mesa, paso a paso: 1. Cotización, 2. Anticipo, 3. Fabricación, 4. Evidencias, 5. Entrega"
+                className="w-full h-auto rounded-xl border border-midgard-light-gray"
+                loading="lazy"
+              />
+            </a>
             <p className="mb-2">El proceso de compra consta de los siguientes pasos:</p>
             <ol className="list-decimal list-inside space-y-2">
               <li>Cotización del producto.</li>
